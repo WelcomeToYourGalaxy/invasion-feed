@@ -35,20 +35,35 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add wire_invasion.json
-          if git diff --cached --quiet; then
-            echo "No change to wire_invasion.json"
+          BRANCH="${GITHUB_REF_NAME}"
+          WIRE="wire_invasion.json"
+          cp "$WIRE" /tmp/harvested.json
+
+          commit_wire() {
+            cp /tmp/harvested.json "$WIRE"
+            git add "$WIRE"
+            if git diff --cached --quiet; then
+              return 1
+            fi
+            COUNT=$(python3 -c "import json;d=json.load(open('wire_invasion.json'));c=d['counts'];print(str(c['stories'])+' stories, '+str(c['human'])+' human, '+str(c['species'])+' species')")
+            git commit -m "wire: $COUNT ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+            return 0
+          }
+
+          if ! commit_wire; then
+            echo "No change to $WIRE"
             exit 0
           fi
-          COUNT=$(python3 -c "import json;d=json.load(open('wire_invasion.json'));c=d['counts'];print(str(c['stories'])+' stories, '+str(c['human'])+' human, '+str(c['species'])+' species')")
-          git commit -m "wire: $COUNT ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+
           for attempt in 1 2 3 4 5; do
             if git push; then
               echo "Pushed on attempt $attempt"
               exit 0
             fi
-            echo "Push rejected — main moved. Rebasing and retrying (attempt $attempt)."
-            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            echo "Push rejected — main moved. Taking the remote and re-applying the harvest (attempt $attempt)."
+            git fetch origin "$BRANCH"
+            git reset --hard "origin/$BRANCH"
+            commit_wire || { echo "Remote already has this wire"; exit 0; }
             sleep $((attempt * 5))
           done
           echo "Could not push after five attempts."
