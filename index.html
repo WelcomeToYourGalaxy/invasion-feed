@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invasion — the crossing into the non-human world</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   The Space Front — a monitoring feed.
+   Everything scoped to .iv so it can be embedded anywhere.
+   ============================================================ */
+.iv {
+    --ink: #eef2f8;
+    --ink-dim: #9aa8bd;
+    --ink-faint: #67748a;
+    --line: rgba(255,255,255,0.10);
+    --line-soft: rgba(255,255,255,0.06);
+    --accent: #86e08f;     /* green — live dot, title, progress */
+    --flag: #cf6fd8;       /* magenta — pressing marker */
+    --cool: #8fb4ff;
+
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--ink);
+    background:
+        radial-gradient(1100px 520px at 88% -10%, rgba(35,105,95,0.26), transparent 60%),
+        radial-gradient(760px 420px at 4% 4%, rgba(80,55,130,0.20), transparent 58%),
+        linear-gradient(180deg, #05070e 0%, #0a0f1c 60%, #070b14 100%);
+    line-height: 1.45;
+    width: 100%;
+    height: 100svh;
+    min-height: 540px;
+    margin: 0 auto;
+    padding: clamp(0.7rem, 1.6vw, 1.1rem) clamp(0.7rem, 2vw, 1.4rem) 0.6rem;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.45rem, 1vh, 0.75rem);
+    contain: layout style;
+}
+.iv * { box-sizing: border-box; }
+.iv a { color: inherit; }
+
+/* ---------- Header ---------- */
+.iv-head { flex: 0 0 auto; display: flex; align-items: baseline; justify-content: space-between; gap: clamp(0.8rem, 3vw, 2.2rem); flex-wrap: wrap; max-width: 1320px; width: 100%; margin: 0 auto; }
+.iv-title { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(1.35rem, 2.9vw, 2.25rem); line-height: 1.05; letter-spacing: -0.015em; margin: 0; color: #fbfcfe; display: flex; align-items: center; gap: 0.55rem; }
+.iv-title em { font-style: italic; color: var(--accent); }
+.iv-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 4px rgba(74,222,128,0.14); animation: iv-pulse 2.6s ease-in-out infinite; flex: 0 0 auto; }
+.iv-dot.idle { background: #94a3b8; box-shadow: 0 0 0 4px rgba(148,163,184,0.12); animation: none; }
+.iv-dot.error { background: #f87171; box-shadow: 0 0 0 4px rgba(248,113,113,0.14); animation: none; }
+@keyframes iv-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+.iv-lede { font-size: clamp(0.63rem, 0.85vw, 0.72rem); color: var(--ink-dim); max-width: 62ch; margin: 0; line-height: 1.45; }
+.iv-lede strong { color: var(--ink); font-weight: 500; }
+
+/* ---------- Panel ---------- */
+.iv-panel { flex: 1 1 auto; min-height: 0; max-width: 1320px; width: 100%; margin: 0 auto; border: 1px solid var(--line-soft); border-radius: 16px; background: rgba(255,255,255,0.022); overflow: hidden; display: flex; flex-direction: column; }
+.iv-bar { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; flex-wrap: wrap; padding: 0.45rem 0.9rem; border-bottom: 1px solid var(--line-soft); }
+.iv-status { font-size: 0.63rem; color: var(--ink-dim); margin: 0; }
+.iv-tools { display: flex; align-items: center; gap: 0.4rem; flex: 1 1 260px; justify-content: flex-end; max-width: 520px; }
+.iv-search { flex: 1 1 auto; min-width: 120px; font-family: inherit; font-size: 0.7rem; color: var(--ink); background: rgba(255,255,255,0.04); border: 1px solid var(--line-soft); border-radius: 8px; padding: 0.3rem 0.6rem; }
+.iv-search::placeholder { color: var(--ink-faint); }
+.iv-search:focus { outline: none; border-color: rgba(255,255,255,0.24); }
+.iv-btn { font-family: inherit; font-size: 0.62rem; letter-spacing: 0.06em; color: var(--ink); background: rgba(255,255,255,0.05); border: 1px solid var(--line); border-radius: 999px; padding: 0.28rem 0.7rem; cursor: pointer; flex: 0 0 auto; }
+.iv-btn:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.24); }
+.iv-btn:disabled { opacity: 0.5; cursor: default; }
+.iv-progress { height: 2px; background: rgba(255,255,255,0.06); }
+.iv-progress-fill { height: 100%; width: 0; background: var(--accent); transition: width 0.35s ease; }
+
+.iv-filters { flex: 0 0 auto; display: flex; flex-direction: column; gap: 0.2rem; padding: 0.35rem 0.9rem; border-bottom: 1px solid var(--line-soft); }
+.iv-row { display: flex; align-items: center; gap: 0.35rem; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding-bottom: 1px; }
+.iv-row::-webkit-scrollbar { height: 0; }
+.iv-key { position: sticky; left: 0; z-index: 1; flex: 0 0 auto; font-size: 0.53rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); background: linear-gradient(90deg, #0a0f1c 72%, transparent); padding-right: 0.4rem; min-width: 62px; }
+.iv-chip { flex: 0 0 auto; font-family: inherit; font-size: 0.62rem; color: var(--ink-dim); background: rgba(255,255,255,0.03); border: 1px solid var(--line-soft); border-radius: 999px; padding: 0.15rem 0.55rem; cursor: pointer; white-space: nowrap; }
+.iv-chip:hover { color: var(--ink); border-color: rgba(255,255,255,0.22); }
+.iv-chip.on { color: #08111f; background: var(--chipcolor, #e8eef7); border-color: transparent; font-weight: 500; }
+.iv-chip .iv-n { opacity: 0.6; margin-left: 0.3rem; font-variant-numeric: tabular-nums; }
+.iv-chip.empty { opacity: 0.4; }
+
+.iv-list { flex: 1 1 auto; min-height: 130px; overflow-y: auto; scrollbar-width: thin; overscroll-behavior: contain; }
+.iv-item { display: block; padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--line-soft); text-decoration: none; color: inherit; }
+.iv-item:last-child { border-bottom: 0; }
+.iv-item:hover { background: rgba(255,255,255,0.035); }
+.iv-item.watch { border-left: 2px solid var(--flag); }
+.iv-meta { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; font-size: 0.57rem; color: var(--ink-faint); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.2rem; }
+.iv-lang { color: #cbd6e6; background: rgba(255,255,255,0.07); border-radius: 4px; padding: 0.06rem 0.32rem; letter-spacing: 0.08em; }
+.iv-flag { color: var(--flag); border: 1px solid rgba(255,107,157,0.5); border-radius: 4px; padding: 0.04rem 0.3rem; }
+.iv-scale { display: inline-flex; gap: 2px; align-items: center; }
+.iv-pip { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.18); }
+.iv-pip.on { background: var(--accent); }
+.iv-why { color: var(--ink-faint); letter-spacing: 0.08em; }
+.iv-standing { border: 1px solid; border-radius: 999px; padding: 0.02rem 0.4rem; letter-spacing: 0.12em; }
+.iv-item-title { font-size: 0.79rem; font-weight: 500; line-height: 1.35; color: #f0f4fa; }
+.iv-item:hover .iv-item-title { color: var(--cool); }
+.iv-snip { font-size: 0.66rem; line-height: 1.45; color: var(--ink-dim); margin-top: 0.15rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.iv-tags { display: flex; gap: 0.28rem; flex-wrap: wrap; margin-top: 0.3rem; }
+.iv-t { font-size: 0.53rem; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid; border-radius: 999px; padding: 0.08rem 0.42rem; }
+.iv-state { padding: 1.6rem 1rem; text-align: center; font-size: 0.74rem; color: var(--ink-dim); line-height: 1.6; }
+.iv-state strong { color: var(--ink); font-weight: 500; }
+.iv-more { display: block; width: 100%; border: 0; border-top: 1px solid var(--line-soft); background: rgba(255,255,255,0.02); font-family: inherit; font-size: 0.64rem; color: var(--ink-dim); padding: 0.45rem; cursor: pointer; letter-spacing: 0.06em; }
+.iv-more:hover { color: var(--ink); }
+
+/* ---------- Sheets ---------- */
+.iv-sheet { position: absolute; left: clamp(0.7rem, 2vw, 1.4rem); right: clamp(0.7rem, 2vw, 1.4rem); bottom: 2.6rem; z-index: 30; max-height: 66%; overflow-y: auto; display: none; border: 1px solid var(--line); border-radius: 14px; padding: 0.9rem 1rem; background: rgba(10,15,28,0.96); backdrop-filter: blur(10px); box-shadow: 0 24px 60px rgba(0,0,0,0.55); }
+.iv-sheet.open { display: block; }
+.iv-sheet-close { position: absolute; top: 0.5rem; right: 0.7rem; background: none; border: 0; color: var(--ink-faint); font-size: 1rem; cursor: pointer; font-family: inherit; line-height: 1; }
+.iv-sheet-close:hover { color: var(--ink); }
+.iv-note { font-size: 0.68rem; line-height: 1.6; color: var(--ink-dim); margin: 0 0 0.6rem; max-width: 96ch; }
+.iv-note strong { color: var(--ink); font-weight: 500; }
+.iv-src-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.1rem 0.9rem; }
+.iv-src { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.62rem; color: var(--ink-dim); padding: 0.14rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.iv-src span:last-child { font-variant-numeric: tabular-nums; color: var(--ink-faint); }
+.iv-src.fail span:last-child { color: #d98a8a; }
+
+.iv-foot { flex: 0 0 auto; max-width: 1320px; width: 100%; margin: 0 auto; padding-top: 0.4rem; border-top: 1px solid var(--line-soft); font-size: 0.57rem; color: var(--ink-faint); line-height: 1.4; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.iv-foot-tools { display: flex; gap: 0.35rem; flex: 0 0 auto; }
+.iv-tab { font-family: inherit; font-size: 0.58rem; letter-spacing: 0.08em; color: var(--ink-dim); background: rgba(255,255,255,0.04); border: 1px solid var(--line-soft); border-radius: 999px; padding: 0.2rem 0.6rem; cursor: pointer; }
+.iv-tab:hover, .iv-tab.on { color: var(--ink); border-color: rgba(255,255,255,0.24); }
+
+@media (max-width: 900px) {
+    .iv { height: auto; min-height: 0; overflow: visible; }
+    .iv-panel { flex: 0 0 auto; }
+    .iv-list { max-height: 70vh; }
+    .iv-sheet { position: fixed; left: 0.6rem; right: 0.6rem; bottom: 0.6rem; max-height: 72vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .iv *, .iv *::before, .iv *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body style="margin:0; background:#05070e;">
+<div class="iv">
+
+    <header class="iv-head">
+        <h1 class="iv-title"><span class="iv-dot idle" id="ivDot"></span> <em>Invasion</em></h1>
+        <p class="iv-lede">
+            <strong>Two invasions of the non-human world, worldwide, in 25 languages.</strong>
+            Ours — roads, concessions, mining, drilling, trawling and licensing pushing into intact, remote and
+            unsurveyed places, including the territories of peoples living in isolation. And the one we carry —
+            species arriving where they did not evolve, the pathogens travelling with them, and the natives that
+            give way. Filter by which kind, or read both together.
+        </p>
+    </header>
+
+    <section class="iv-panel">
+        <div class="iv-bar">
+            <p class="iv-status" id="ivStatus">Loading the wire…</p>
+            <div class="iv-tools">
+                <input class="iv-search" id="ivSearch" type="search" placeholder="fire ants, concession, ballast, uncontacted…" aria-label="Filter headlines">
+                <button class="iv-btn" id="ivClear">Clear</button>
+                <button class="iv-btn" id="ivRefresh">Refresh</button>
+            </div>
+        </div>
+        <div class="iv-progress"><div class="iv-progress-fill" id="ivProgress"></div></div>
+
+        <div class="iv-filters">
+            <div class="iv-row" id="ivTopicRow"><span class="iv-key">Subject</span></div>
+            <div class="iv-row" id="ivGeoRow"><span class="iv-key">Region</span></div>
+            <div class="iv-row" id="ivRegionRow"><span class="iv-key">Standing</span></div>
+            <div class="iv-row" id="ivKindRow"><span class="iv-key">Invasion</span></div>
+            <div class="iv-row" id="ivEvidenceRow"><span class="iv-key">Pressure</span></div>
+            <div class="iv-row" id="ivLangRow"><span class="iv-key">Language</span></div>
+            <div class="iv-row" id="ivWhenRow"><span class="iv-key">Window</span></div>
+        </div>
+
+        <div class="iv-list" id="ivList"><div class="iv-state">Loading the wire…</div></div>
+    </section>
+
+    <div class="iv-sheet" id="ivSheetAbout" role="dialog" aria-label="How this feed works">
+        <button class="iv-sheet-close" data-close aria-label="Close">×</button>
+        <p class="iv-note">
+            <strong>What this is.</strong> A feed on invasion of the non-human world, in both directions it
+            happens. Nothing here is written or summarised: headlines and snippets are the publishers' own, every
+            row links to the original, and no model touches the text.
+        </p>
+        <p class="iv-note">
+            <strong>Human incursion.</strong> Roads cut into intact forest, concessions granted over primary
+            habitat, mining and drilling at the frontier, trawling and seabed licensing, tourism and expeditions
+            into places that were remote, unsurveyed or left alone — and the territories of peoples living in
+            isolation, whose ground is invaded by the same machinery. A road on its own is not this feed's
+            business; a road into a forest is, which is why both halves have to be present before a story is kept.
+        </p>
+        <p class="iv-note">
+            <strong>Species invasion.</strong> Organisms arriving where they did not evolve, carried in ballast
+            water, hull fouling, the pet and horticulture trades, aquaculture escapes and timber; the pathogens
+            that travel with them — chytrid, white-nose, high-path avian influenza in wild birds, African swine
+            fever in boar; the ranges shifting as waters warm; the natives that give way; and the eradication and
+            biosecurity work aimed at all of it.
+        </p>
+        <p class="iv-note">
+            <strong>Which is which.</strong> Every row is labelled, and the <em>Invasion</em> filter separates
+            them. A story can be both — a new road that also carries a weed front up it — and then it appears
+            under both.
+        </p>
+        <p class="iv-note">
+            <strong>Pressure.</strong> Each story is scored on what it carries: a documented incursion — a first
+            detection, a concession granted, an outbreak, construction begun (2); institutional material — IUCN,
+            IPBES, CBD, a national inventory, satellite monitoring, peer review (2); a measured extent in hectares,
+            kilometres or per cent (1); a forward projection (1); a named place (1); and a primary source (1). At
+            three or more the row is marked pressing, and the <em>Pressure</em> filter narrows to those.
+        </p>
+        <p class="iv-note">
+            <strong>What is refused.</strong> Invasion in its military and criminal senses — armies, home
+            invasions, pitch invasions, the film — and <em>alien</em> in its immigration and cinema senses.
+            Eradication in its public-health sense, so that polio and malaria campaigns stay out. The status line
+            reports how many stories each harvest refused.
+        </p>
+        <p class="iv-note">
+            <strong>Limits worth knowing.</strong> The gate is mechanical: it reads words, not meaning. An
+            incursion story written without any wilderness vocabulary will be missed. Standing is assigned per
+            wire rather than per article. Google News caps a query at roughly 100 results over about 30 days.
+            Coverage is uneven by language and the counts show it rather than hiding it.
+        </p>
+    </div>
+
+    <div class="iv-sheet" id="ivSheetSources" role="dialog" aria-label="Sources and coverage">
+        <button class="iv-sheet-close" data-close aria-label="Close">×</button>
+        <p class="iv-note">
+            Every wire read on the last harvest, with its standing: what it returned, and how many of its
+            stories were refused. A wire that could not be reached says so rather than disappearing.
+        </p>
+        <div class="iv-src-grid" id="ivSrcGrid"></div>
+    </div>
+
+    <footer class="iv-foot">
+        <span>Harvested every two hours from conservation and biosecurity agencies, journals, field press, regional editions in 25 languages, and dedicated event searches. Headlines belong to their publishers.</span>
+        <span class="iv-foot-tools">
+            <button class="iv-tab" data-sheet="ivSheetAbout">How this works</button>
+            <button class="iv-tab" data-sheet="ivSheetSources">Sources &amp; coverage</button>
+        </span>
+    </footer>
+</div>
+
+<script>
+(function () {
+'use strict';
+
+const REPO = 'WelcomeToYourGalaxy/invasion-feed';
+const BRANCH = 'main';
+const ENDPOINTS = [
+    () => 'https://raw.githubusercontent.com/' + REPO + '/' + BRANCH + '/wire_invasion.json?t=' + Date.now(),
+    () => 'https://cdn.jsdelivr.net/gh/' + REPO + '@' + BRANCH + '/wire_invasion.json'
+];
+
+const TOPIC_COLOR = {
+    frontier: '#e0607f',       // rose
+    remote: '#9fb8ff',         // indigo
+    invasive: '#86e08f',       // green
+    pathogens: '#cf6fd8',      // magenta
+    pathways: '#6fd3ff',       // cyan
+    displacement: '#e29ad8',   // pink
+    control: '#8de6c8',        // mint
+    law: '#6f9bff',            // azure
+    climate: '#a98cf0',        // violet
+    impact: '#7fd3d8'          // teal
+};
+const STANDING_COLOR = {
+    official: '#9fb8ff', science: '#8de6c8', field: '#86e08f', press: '#9fb0c8'
+};
+const KIND_COLOR = { human: '#e0607f', species: '#86e08f' };
+const WINDOWS = [
+    { id: 'd1', label: '24 hours', ms: 864e5 },
+    { id: 'd7', label: '7 days', ms: 7 * 864e5 },
+    { id: 'd30', label: '30 days', ms: 30 * 864e5 },
+    // the wire keeps 45 days, so anything past a month is reachable on its own
+    { id: 'older', label: 'Older than 30 days', ms: 30 * 864e5, older: true },
+    { id: 'all', label: 'Everything', ms: null }
+];
+
+const EVIDENCE = [
+    { id: 'all', label: 'Any' },
+    { id: 'doc', label: 'Pressing only' }
+];
+
+const state = { items: [], topics: [], languages: {}, sources: [], generated: null,
+                geo: [], standings: [], kinds: [], docScore: 3, topic: 'all', standing: 'all',
+                place: 'all', kind: 'all', langs: new Set(), when: 'all', evidence: 'all',
+                query: '', shown: 50, loading: false };
+
+const $list = document.getElementById('ivList');
+const $status = document.getElementById('ivStatus');
+const $dot = document.getElementById('ivDot');
+const $prog = document.getElementById('ivProgress');
+const $topicRow = document.getElementById('ivTopicRow');
+const $standingRow = document.getElementById('ivRegionRow');
+const $evidenceRow = document.getElementById('ivEvidenceRow');
+const $kindRow = document.getElementById('ivKindRow');
+const $geoRow = document.getElementById('ivGeoRow');
+const $langRow = document.getElementById('ivLangRow');
+const $whenRow = document.getElementById('ivWhenRow');
+const $search = document.getElementById('ivSearch');
+const $srcGrid = document.getElementById('ivSrcGrid');
+const $refresh = document.getElementById('ivRefresh');
+const $more = document.createElement('button');
+$more.className = 'iv-more';
+$more.addEventListener('click', () => { state.shown += 50; render(); });
+
+function esc(s) { return (s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+function timeAgo(ts) {
+    if (!ts) return 'undated';
+    const m = Math.round((Date.now() - ts) / 60000);
+    if (m < 1) return 'just now';
+    if (m < 60) return m + 'm ago';
+    const h = Math.round(m / 60);
+    if (h < 24) return h + 'h ago';
+    const d = Math.round(h / 24);
+    return d < 30 ? d + 'd ago' : new Date(ts).toISOString().slice(0, 10);
+}
+function langName(c) { return state.languages[c] || c; }
+function placeLabel(places) {
+    const named = places.filter(p => p !== 'unlocated');
+    if (!named.length) return 'unplaced';
+    return named.map(p => {
+        const g = state.geo.find(g => g.id === p);
+        return g ? g.label : p;
+    }).slice(0, 3).join(' · ');
+}
+function topicLabel(id) { const t = state.topics.find(t => t.id === id); return t ? t.label : id; }
+function setStatus(text, cls) { $status.textContent = text; $dot.className = 'iv-dot' + (cls ? ' ' + cls : ''); }
+
+async function load() {
+    if (state.loading) return;
+    state.loading = true; $refresh.disabled = true; $prog.style.width = '40%';
+    setStatus('Loading the wire…', '');
+
+    let data = null, err = null;
+    for (const ep of ENDPOINTS) {
+        try {
+            const res = await fetch(ep(), { cache: 'no-store' });
+            if (!res.ok) { err = 'HTTP ' + res.status; continue; }
+            data = await res.json(); break;
+        } catch (e) { err = e.message; }
+    }
+    $prog.style.width = '100%';
+
+    if (!data || !Array.isArray(data.items)) {
+        state.loading = false; $refresh.disabled = false; $prog.style.width = '0';
+        setStatus('The wire could not be read' + (err ? ' (' + err + ')' : '') + '. Press Refresh.', 'error');
+        render(); return;
+    }
+
+    state.items = data.items.map(i => ({
+        title: i.t, link: i.u, outlet: i.o, lang: i.g, region: i.r,
+        kind: i.k, ts: i.d, snippet: i.s, topics: i.x || ['climate'],
+        score: i.p || 0, why: i.y || [], places: i.w || ['unlocated'],
+        standing: i.st || 'press', kinds: i.k || ['species']
+    }));
+    state.docScore = data.notable_score || 3;
+    state.standings = data.standings || [];
+    state.kindList = data.kinds || [];
+    state.topics = data.topics || [];
+    state.languages = data.languages || {};
+    state.geo = data.geo || [];
+    state.sources = data.sources || [];
+    state.generated = data.generated ? Date.parse(data.generated) : null;
+
+    buildChips(); renderSources();
+
+    const c = data.counts || {};
+    const ageH = state.generated ? (Date.now() - state.generated) / 3600000 : null;
+    const docd = state.items.filter(i => i.score >= state.docScore).length;
+    setStatus(
+        (c.stories || state.items.length) + ' stories · ' + docd + ' pressing · ' +
+        (c.refused ? c.refused + ' refused · ' : '') +
+        (c.languages || new Set(state.items.map(i => i.lang)).size) + ' languages · ' +
+        (c.wires_ok || '?') + '/' + (c.wires_total || '?') + ' wires answered · harvested ' +
+        (state.generated ? timeAgo(state.generated) : 'unknown'),
+        ageH !== null && ageH > 6 ? 'idle' : ''
+    );
+
+    state.loading = false; $refresh.disabled = false;
+    setTimeout(() => { $prog.style.width = '0'; }, 400);
+    render();
+}
+
+function withinWindow(i, win) {
+    const w = WINDOWS.find(w => w.id === (win || state.when));
+    if (!w || !w.ms) return true;
+    if (!i.ts) return false;
+    const age = Date.now() - i.ts;
+    return w.older ? age > w.ms : age <= w.ms;
+}
+
+function visible() {
+    const q = state.query.toLowerCase();
+    return state.items.filter(i => {
+        if (state.topic !== 'all' && i.topics.indexOf(state.topic) === -1) return false;
+        if (state.standing !== 'all' && i.standing !== state.standing) return false;
+        if (state.kind !== 'all' && i.kinds.indexOf(state.kind) === -1) return false;
+        if (state.evidence === 'doc' && i.score < state.docScore) return false;
+        if (state.place !== 'all' && i.places.indexOf(state.place) === -1) return false;
+        if (state.langs.size && !state.langs.has(i.lang)) return false;
+        if (!withinWindow(i)) return false;
+        if (q && (i.title + ' ' + i.snippet + ' ' + i.outlet).toLowerCase().indexOf(q) === -1) return false;
+        return true;
+    }).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+}
+
+function render() {
+    const items = visible(), slice = items.slice(0, state.shown);
+    if (!slice.length) {
+        $list.innerHTML = '<div class="iv-state">' + (
+            state.loading ? 'Loading the wire…'
+            : state.items.length ? '<strong>Nothing matches these filters.</strong><br>Widen the window, the subject or the language.'
+            : '<strong>No stories loaded.</strong><br>Press Refresh, or check that the harvester has run.'
+        ) + '</div>';
+    } else {
+        $list.innerHTML = slice.map(i => {
+            const tags = i.topics.map(id => {
+                const c = TOPIC_COLOR[id] || '#9fb0c8';
+                return '<span class="iv-t" style="color:' + c + ';border-color:' + c + '55">' + esc(topicLabel(id)) + '</span>';
+            }).join('');
+            const documented = i.score >= state.docScore;
+            const sc = STANDING_COLOR[i.standing] || '#9fb0c8';
+            const stLabel = (state.standings.find(s => s.id === i.standing) || {}).label || i.standing;
+            const pips = '<span class="iv-scale" title="pressure score ' + i.score + '">' +
+                [1,2,3,4,5].map(n => '<span class="iv-pip' + (n <= Math.min(i.score,5) ? ' on' : '') + '"></span>').join('') +
+                '</span>';
+            return '<a class="iv-item' + (documented ? ' watch' : '') + '" href="' + esc(i.link) + '" target="_blank" rel="noopener noreferrer">' +
+                '<div class="iv-meta"><span class="iv-lang">' + esc(langName(i.lang)) + '</span>' +
+                '<span class="iv-standing" style="color:' + sc + ';border-color:' + sc + '55">' + esc(stLabel) + '</span>' +
+                i.kinds.map(k => {
+                    const kc = KIND_COLOR[k] || '#9fb0c8';
+                    const kl = (state.kindList.find(x => x.id === k) || {}).label || k;
+                    return '<span class="iv-standing" style="color:' + kc + ';border-color:' + kc + '55">' + esc(kl) + '</span>';
+                }).join('') +
+                '<span>' + esc(i.outlet) + '</span>' +
+                '<span>' + esc(placeLabel(i.places)) + '</span>' +
+                pips + (i.why.length ? '<span class="iv-why">' + esc(i.why.join(' · ')) + '</span>' : '') +
+                '<span>' + timeAgo(i.ts) + '</span></div>' +
+                '<div class="iv-item-title">' + esc(i.title) + '</div>' +
+                (i.snippet ? '<div class="iv-snip">' + esc(i.snippet) + '</div>' : '') +
+                '<div class="iv-tags">' + tags + '</div></a>';
+        }).join('');
+        if (items.length > state.shown) {
+            $more.textContent = 'Show more (' + (items.length - state.shown) + ' remaining)';
+            $list.appendChild($more);
+        }
+    }
+    chipCounts();
+}
+
+function chip(row, key, value, label, color) {
+    const c = document.createElement('button');
+    c.className = 'iv-chip';
+    c.dataset[key] = value;
+    if (color) c.style.setProperty('--chipcolor', color);
+    c.innerHTML = esc(label) + ' <span class="iv-n"></span>';
+    row.appendChild(c);
+    return c;
+}
+
+function buildChips() {
+    [$topicRow, $geoRow, $standingRow, $kindRow, $evidenceRow, $langRow, $whenRow].forEach(r => r.querySelectorAll('.iv-chip').forEach(c => c.remove()));
+
+    chip($topicRow, 'topic', 'all', 'All').classList.add('on');
+    state.topics.forEach(t => chip($topicRow, 'topic', t.id, t.label, TOPIC_COLOR[t.id]));
+
+    chip($geoRow, 'place', 'all', 'Everywhere').classList.add('on');
+    state.geo.forEach(g => {
+        const c = chip($geoRow, 'place', g.id, g.label);
+        if (g.id === state.place) c.classList.add('on');
+    });
+
+    chip($standingRow, 'standing', 'all', 'All').classList.add('on');
+    state.standings.forEach(st => {
+        const c = chip($standingRow, 'standing', st.id, st.label);
+        c.style.setProperty('--chipcolor', STANDING_COLOR[st.id] || '#e8eef7');
+        if (st.id === state.standing) c.classList.add('on');
+    });
+
+    chip($kindRow, 'kind', 'all', 'Both').classList.add('on');
+    (state.kindList || []).forEach(k => {
+        const c = chip($kindRow, 'kind', k.id, k.label);
+        c.style.setProperty('--chipcolor', KIND_COLOR[k.id] || '#e8eef7');
+        if (k.id === state.kind) c.classList.add('on');
+    });
+
+    EVIDENCE.forEach(e => {
+        const c = chip($evidenceRow, 'evidence', e.id, e.label);
+        if (e.id === state.evidence) c.classList.add('on');
+    });
+
+    Object.keys(state.languages).sort((a, b) => langName(a).localeCompare(langName(b)))
+        .forEach(code => chip($langRow, 'lang', code, langName(code)));
+
+    WINDOWS.forEach(w => {
+        const c = chip($whenRow, 'when', w.id, w.label);
+        if (w.id === state.when) c.classList.add('on');
+    });
+
+}
+
+function chipCounts() {
+    const q = state.query.toLowerCase();
+    const base = state.items.filter(i =>
+        (!q || (i.title + ' ' + i.snippet).toLowerCase().indexOf(q) !== -1) && withinWindow(i));
+    $topicRow.querySelectorAll('.iv-chip').forEach(c => {
+        const id = c.dataset.topic;
+        const n = id === 'all' ? base.length : base.filter(i => i.topics.indexOf(id) !== -1).length;
+        c.querySelector('.iv-n').textContent = n;
+        c.classList.toggle('empty', n === 0 && id !== 'all');
+    });
+    $geoRow.querySelectorAll('.iv-chip').forEach(c => {
+        const g = c.dataset.place;
+        const n = g === 'all' ? base.length : base.filter(i => i.places.indexOf(g) !== -1).length;
+        c.querySelector('.iv-n').textContent = n;
+        c.classList.toggle('empty', n === 0 && g !== 'all');
+    });
+    $standingRow.querySelectorAll('.iv-chip').forEach(c => {
+        const r = c.dataset.standing;
+        const n = r === 'all' ? base.length : base.filter(i => i.standing === r).length;
+        c.querySelector('.iv-n').textContent = n;
+        c.classList.toggle('empty', n === 0 && r !== 'all');
+    });
+    $kindRow.querySelectorAll('.iv-chip').forEach(c => {
+        const k = c.dataset.kind;
+        const n = k === 'all' ? base.length : base.filter(i => i.kinds.indexOf(k) !== -1).length;
+        c.querySelector('.iv-n').textContent = n;
+        c.classList.toggle('empty', n === 0 && k !== 'all');
+    });
+    $evidenceRow.querySelectorAll('.iv-chip').forEach(c => {
+        const id = c.dataset.evidence;
+        c.querySelector('.iv-n').textContent =
+            id === 'doc' ? base.filter(i => i.score >= state.docScore).length : base.length;
+    });
+    $langRow.querySelectorAll('.iv-chip').forEach(c => {
+        const n = base.filter(i => i.lang === c.dataset.lang).length;
+        c.querySelector('.iv-n').textContent = n;
+        c.classList.toggle('empty', n === 0);
+    });
+    $whenRow.querySelectorAll('.iv-chip').forEach(c => {
+        const n = state.items.filter(i => withinWindow(i, c.dataset.when)).length;
+        c.querySelector('.iv-n').textContent = n;
+        // the archive chip only appears once there is an archive
+        if (c.dataset.when === 'older') c.style.display = n ? '' : 'none';
+    });
+}
+
+function renderSources() {
+    $srcGrid.innerHTML = state.sources.map(s =>
+        '<div class="iv-src ' + (s.ok ? '' : 'fail') + '"><span>' + esc(s.name) + '</span>' +
+        '<span>' + (s.ok ? s.kept + ' kept' + (s.refused ? ' · ' + s.refused + ' refused' : '') : 'unreachable') +
+        '</span></div>').join('');
+}
+
+/* ---- Wiring ---- */
+function single(row, key) {
+    row.addEventListener('click', e => {
+        const c = e.target.closest('.iv-chip'); if (!c) return;
+        state[key] = c.dataset[key]; state.shown = 50;
+        row.querySelectorAll('.iv-chip').forEach(x => x.classList.toggle('on', x === c));
+        render();
+    });
+}
+single($topicRow, 'topic');
+single($standingRow, 'standing');
+single($evidenceRow, 'evidence');
+single($kindRow, 'kind');
+single($geoRow, 'place');
+single($whenRow, 'when');
+
+$langRow.addEventListener('click', e => {
+    const c = e.target.closest('.iv-chip'); if (!c) return;
+    const code = c.dataset.lang;
+    if (state.langs.has(code)) state.langs.delete(code); else state.langs.add(code);
+    c.classList.toggle('on', state.langs.has(code));
+    state.shown = 50; render();
+});
+
+$refresh.addEventListener('click', load);
+document.getElementById('ivClear').addEventListener('click', () => {
+    state.topic = 'all'; state.standing = 'all'; state.evidence = 'all'; state.place = 'all';
+    state.kind = 'all';
+    state.langs.clear(); state.when = 'all';
+    state.query = ''; state.shown = 50; $search.value = '';
+    $topicRow.querySelectorAll('.iv-chip').forEach(c => c.classList.toggle('on', c.dataset.topic === 'all'));
+    $standingRow.querySelectorAll('.iv-chip').forEach(c => c.classList.toggle('on', c.dataset.standing === 'all'));
+    $evidenceRow.querySelectorAll('.iv-chip').forEach(c => c.classList.toggle('on', c.dataset.evidence === 'all'));
+    $kindRow.querySelectorAll('.iv-chip').forEach(c => c.classList.toggle('on', c.dataset.kind === 'all'));
+    $geoRow.querySelectorAll('.iv-chip').forEach(c => c.classList.toggle('on', c.dataset.place === 'all'));
+    $langRow.querySelectorAll('.iv-chip').forEach(c => c.classList.remove('on'));
+    $whenRow.querySelectorAll('.iv-chip').forEach(c => c.classList.toggle('on', c.dataset.when === 'all'));
+    render();
+});
+let timer;
+$search.addEventListener('input', e => {
+    clearTimeout(timer); const v = e.target.value;
+    timer = setTimeout(() => { state.query = v; state.shown = 50; render(); }, 180);
+});
+
+document.querySelectorAll('.iv-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        const sheet = document.getElementById(tab.dataset.sheet);
+        const opening = !sheet.classList.contains('open');
+        document.querySelectorAll('.iv-sheet').forEach(s => s.classList.remove('open'));
+        document.querySelectorAll('.iv-tab').forEach(t => t.classList.remove('on'));
+        if (opening) { sheet.classList.add('open'); tab.classList.add('on'); }
+    });
+});
+document.querySelectorAll('.iv-sheet [data-close]').forEach(b => {
+    b.addEventListener('click', () => {
+        b.closest('.iv-sheet').classList.remove('open');
+        document.querySelectorAll('.iv-tab').forEach(t => t.classList.remove('on'));
+    });
+});
+document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.iv-sheet').forEach(s => s.classList.remove('open'));
+    document.querySelectorAll('.iv-tab').forEach(t => t.classList.remove('on'));
+});
+
+load();
+setInterval(() => { if (!document.hidden) load(); }, 15 * 60 * 1000);
+})();
+</script>
+</body>
+</html>
