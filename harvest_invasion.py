@@ -7,18 +7,16 @@ Self-contained: fetching, feed parsing, word-edge matching and deduplication are
 all in this file. Reads sources_invasion.json, writes wire_invasion.json.
 Standard library only — no dependencies, no API keys, no model calls.
 
-Two kinds of invasion, one feed.
+Two kinds of invasion, one feed. The invaded are always non-human: wild animals,
+plants, fungi and the systems they make. "Native" in this feed never means
+people; it means the species that were already there.
 
-The first is ours: roads cut into intact forest, concessions granted over
-primary habitat, mining and drilling at the frontier, tourism and trawling and
-licensing pushing into places that were remote, unsurveyed or left alone —
-including the territories of peoples living in isolation, whose ground is
-invaded by the same machinery.
+The first invasion is ours — roads, concessions, mining, drilling, trawling and
+licensing pushing into intact, remote and unsurveyed places.
 
-The second is not ours but is nearly always our doing: species arriving where
+The second is not ours but is nearly always our doing — species arriving where
 they did not evolve, carried in ballast water, pet trade, horticulture,
-aquaculture and hulls, together with the pathogens that travel with them and the
-native communities that give way.
+aquaculture and hulls, along with the pathogens that travel with them.
 
 A story qualifies on either count. Each carries a standing — official, science,
 field or press — and a pressure score built from documented incursions,
@@ -53,7 +51,7 @@ OUT_PATH = os.path.join(HERE, "wire_invasion.json")
 
 RETAIN_DAYS = 45
 MAX_ITEMS = 1200
-WORKERS = 6
+WORKERS = 8          # 110 wires now, so read a few more at once
 NOTABLE_SCORE = 3       # at or above this a story is marked as pressing
 
 # --------------------------------------------------------------------------
@@ -73,7 +71,8 @@ WS_RE = re.compile(r"\s+")
 PUNCT_RE = re.compile(r"[^\w\s]", re.UNICODE)
 
 def build_gnews_url(loc):
-    q = loc["query"] + " when:30d"
+    # the wire keeps 45 days, so ask the search for the same span rather than 30
+    q = loc["query"] + " when:45d"
     return ("https://news.google.com/rss/search?q=" + urllib.parse.quote(q) +
             "&hl=" + loc["hl"] + "&gl=" + loc["gl"] + "&ceid=" + loc["ceid"])
 
@@ -397,12 +396,14 @@ TOPICS = [
         ("shipping route*", ["species", "invasive", "arctic"]),
         ("smuggl*", ["wildlife", "plants", "species", "seeds"]),
     ]),
-    ("displacement", "Native decline & displacement", [
+    ("displacement", "Wildlife & plants displaced", [
         ("outcompet*", None), ("displac*", ["native", "species", "population"]),
         ("predation", ["native", "seabird", "chick", "nest", "island"]),
         ("hybridis*", ["native", "wild", "population"]), ("hybridiz*", ["native", "wild", "population"]),
         ("local extinction*", None), ("extirpat*", None),
         ("native species", ["decline", "loss", "collapse", "threatened", "pressure"]),
+        ("native wildlife", None), ("native plant*", None), ("native bird*", None),
+        ("native fish", None), ("native insect*", None), ("native vegetation", None),
         ("endemic", ["threatened", "decline", "extinct", "island"]),
         ("nest failure", None), ("recruitment failure", None),
     ]),
@@ -458,6 +459,8 @@ INVASION = [
     "non-native species", "nonnative species", "introduced species", "exotic species",
     "biological invasion*", "naturalised population", "naturalized population",
     "invasive plant*", "invasive insect*", "invasive fish", "invasive weed*",
+    "invasive predator*", "invasive population*", "invaders", "invasion front",
+    "native species", "native wildlife", "native plant*", "native bird*", "native fish",
     "feral population*", "pest incursion", "biosecurity", "biosecurity incursion",
     "first detection", "first detected", "first record of", "new arrival*",
     "fire ant*", "cane toad*", "lionfish", "zebra mussel*", "water hyacinth",
@@ -490,6 +493,10 @@ INCURSION = [
 ]
 
 WILD = [
+    "forest*", "jungle", "woodland*", "bushland", "wetland*", "marsh*", "swamp",
+    "reef", "savanna*", "grassland*", "steppe", "moorland", "heathland", "estuar*",
+    "wildlife", "habitat*", "ecosystem*", "biodiversity", "species", "fauna", "flora",
+    "endemic", "migratory", "breeding ground*", "nesting", "spawning",
     "intact forest", "primary forest", "old-growth", "rainforest", "wilderness",
     "protected area", "national park", "nature reserve", "biosphere reserve",
     "world heritage", "indigenous territor*", "indigenous reserve", "uncontacted",

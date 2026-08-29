@@ -18,7 +18,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Invasion — the crossing into the non-human world</title>
+<title>Invasion of Non-Humans — worldwide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -150,13 +150,10 @@
 <div class="iv">
 
     <header class="iv-head">
-        <h1 class="iv-title"><span class="iv-dot idle" id="ivDot"></span> <em>Invasion</em></h1>
+        <h1 class="iv-title"><span class="iv-dot idle" id="ivDot"></span> Invasion of <em>non-humans</em></h1>
         <p class="iv-lede">
-            <strong>Two invasions of the non-human world, worldwide, in 25 languages.</strong>
-            Ours — roads, concessions, mining, drilling, trawling and licensing pushing into intact, remote and
-            unsurveyed places, including the territories of peoples living in isolation. And the one we carry —
-            species arriving where they did not evolve, the pathogens travelling with them, and the natives that
-            give way. Filter by which kind, or read both together.
+            <strong>Worldwide, in 25 languages.</strong>
+            The invaded here are always non-human: wild animals, plants, fungi and the systems they make.
         </p>
     </header>
 
@@ -176,7 +173,7 @@
             <div class="iv-row" id="ivGeoRow"><span class="iv-key">Region</span></div>
             <div class="iv-row" id="ivRegionRow"><span class="iv-key">Standing</span></div>
             <div class="iv-row" id="ivKindRow"><span class="iv-key">Invasion</span></div>
-            <div class="iv-row" id="ivEvidenceRow"><span class="iv-key">Pressure</span></div>
+            <div class="iv-row" id="ivEvidenceRow"><span class="iv-key">Evidence</span></div>
             <div class="iv-row" id="ivLangRow"><span class="iv-key">Language</span></div>
             <div class="iv-row" id="ivWhenRow"><span class="iv-key">Window</span></div>
         </div>
@@ -188,22 +185,23 @@
         <button class="iv-sheet-close" data-close aria-label="Close">×</button>
         <p class="iv-note">
             <strong>What this is.</strong> A feed on invasion of the non-human world, in both directions it
-            happens. Nothing here is written or summarised: headlines and snippets are the publishers' own, every
-            row links to the original, and no model touches the text.
+            happens. The invaded are always non-human — wild animals, plants, fungi and the systems they make.
+            <em>Native</em> in this feed never means people; it means the species that were already there.
+            Nothing here is written or summarised: headlines and snippets are the publishers' own, every row
+            links to the original, and no model touches the text.
         </p>
         <p class="iv-note">
-            <strong>Human incursion.</strong> Roads cut into intact forest, concessions granted over primary
-            habitat, mining and drilling at the frontier, trawling and seabed licensing, tourism and expeditions
-            into places that were remote, unsurveyed or left alone — and the territories of peoples living in
-            isolation, whose ground is invaded by the same machinery. A road on its own is not this feed's
-            business; a road into a forest is, which is why both halves have to be present before a story is kept.
+            <strong>Human incursion.</strong> Roads cut into forest, concessions granted over habitat, mining and
+            drilling at the frontier, trawling and seabed licensing, tourism and expeditions into places that were
+            remote, unsurveyed or left alone. A road on its own is not this feed's business; a road into a forest
+            is, which is why both halves have to be present before a story is kept.
         </p>
         <p class="iv-note">
             <strong>Species invasion.</strong> Organisms arriving where they did not evolve, carried in ballast
             water, hull fouling, the pet and horticulture trades, aquaculture escapes and timber; the pathogens
             that travel with them — chytrid, white-nose, high-path avian influenza in wild birds, African swine
-            fever in boar; the ranges shifting as waters warm; the natives that give way; and the eradication and
-            biosecurity work aimed at all of it.
+            fever in boar; the ranges shifting as waters warm; the wildlife and plants that give way; and the
+            eradication and biosecurity work aimed at all of it.
         </p>
         <p class="iv-note">
             <strong>Which is which.</strong> Every row is labelled, and the <em>Invasion</em> filter separates
@@ -211,11 +209,13 @@
             under both.
         </p>
         <p class="iv-note">
-            <strong>Pressure.</strong> Each story is scored on what it carries: a documented incursion — a first
+            <strong>Evidence.</strong> Each story is scored on what it carries: a documented incursion — a first
             detection, a concession granted, an outbreak, construction begun (2); institutional material — IUCN,
             IPBES, CBD, a national inventory, satellite monitoring, peer review (2); a measured extent in hectares,
-            kilometres or per cent (1); a forward projection (1); a named place (1); and a primary source (1). At
-            three or more the row is marked pressing, and the <em>Pressure</em> filter narrows to those.
+            kilometres or per cent (1); a forward projection (1); a named place (1); and a primary source (1).
+            The pips on each row show the score out of five and the words beside them name what earned it. At
+            three or more a story counts as well documented, and the <em>Evidence</em> filter narrows the list to
+            those — it hides nothing permanently, it just sets aside the passing mentions.
         </p>
         <p class="iv-note">
             <strong>What is refused.</strong> Invasion in its military and criminal senses — armies, home
@@ -225,9 +225,9 @@
         </p>
         <p class="iv-note">
             <strong>Limits worth knowing.</strong> The gate is mechanical: it reads words, not meaning. An
-            incursion story written without any wilderness vocabulary will be missed. Standing is assigned per
-            wire rather than per article. Google News caps a query at roughly 100 results over about 30 days.
-            Coverage is uneven by language and the counts show it rather than hiding it.
+            incursion story written without any habitat vocabulary will be missed. Standing is assigned per wire
+            rather than per article. Google News caps a query at roughly 100 results over about 30 days. Coverage
+            is uneven by language and the counts show it rather than hiding it.
         </p>
     </div>
 
@@ -286,8 +286,8 @@ const WINDOWS = [
 ];
 
 const EVIDENCE = [
-    { id: 'all', label: 'Any' },
-    { id: 'doc', label: 'Pressing only' }
+    { id: 'all', label: 'All stories' },
+    { id: 'doc', label: 'Well-documented only' }
 ];
 
 const state = { items: [], topics: [], languages: {}, sources: [], generated: null,
@@ -378,7 +378,7 @@ async function load() {
     const ageH = state.generated ? (Date.now() - state.generated) / 3600000 : null;
     const docd = state.items.filter(i => i.score >= state.docScore).length;
     setStatus(
-        (c.stories || state.items.length) + ' stories · ' + docd + ' pressing · ' +
+        (c.stories || state.items.length) + ' stories · ' + docd + ' well-documented · ' +
         (c.refused ? c.refused + ' refused · ' : '') +
         (c.languages || new Set(state.items.map(i => i.lang)).size) + ' languages · ' +
         (c.wires_ok || '?') + '/' + (c.wires_total || '?') + ' wires answered · harvested ' +
@@ -431,7 +431,7 @@ function render() {
             const documented = i.score >= state.docScore;
             const sc = STANDING_COLOR[i.standing] || '#9fb0c8';
             const stLabel = (state.standings.find(s => s.id === i.standing) || {}).label || i.standing;
-            const pips = '<span class="iv-scale" title="pressure score ' + i.score + '">' +
+            const pips = '<span class="iv-scale" title="evidence score ' + i.score + '">' +
                 [1,2,3,4,5].map(n => '<span class="iv-pip' + (n <= Math.min(i.score,5) ? ' on' : '') + '"></span>').join('') +
                 '</span>';
             return '<a class="iv-item' + (documented ? ' watch' : '') + '" href="' + esc(i.link) + '" target="_blank" rel="noopener noreferrer">' +
@@ -453,6 +453,14 @@ function render() {
         if (items.length > state.shown) {
             $more.textContent = 'Show more (' + (items.length - state.shown) + ' remaining)';
             $list.appendChild($more);
+        } else {
+            // the list scrolls inside its own box, so mark where the bottom is
+            const end = document.createElement('div');
+            end.className = 'iv-state';
+            end.style.padding = '0.7rem';
+            end.style.fontSize = '0.62rem';
+            end.textContent = 'End of ' + items.length + ' ' + (items.length === 1 ? 'story' : 'stories');
+            $list.appendChild(end);
         }
     }
     chipCounts();
