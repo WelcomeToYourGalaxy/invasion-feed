@@ -139,6 +139,7 @@
         <p class="iv-lede">
             <strong>Worldwide, in 25 languages.</strong>
             The invaded here are always non-human: wild animals, plants, fungi and the systems they make.
+            Only findings that reach past one place — a spread, a number, a mechanism, a consequence.
         </p>
     </header>
 
@@ -194,7 +195,15 @@
             under both.
         </p>
         <p class="iv-note">
-            <strong>Evidence.</strong> Each story is scored on what it carries: a documented incursion — a first
+            <strong>Scale.</strong> Being on subject is not enough. A single species turning up in one county
+            reads as a register entry, and it is dropped. A story has to reach past one place: a global or
+            regional spread (2 and 1), a systemic mechanism — collapse, cascade, irreversible, unprecedented,
+            established across (2), a number (1), a consequence for people or a system (1), or a generalising
+            study (1). Below two points nothing enters, and the status line reports how many were turned away
+            as too local on the last harvest.
+        </p>
+        <p class="iv-note">
+            <strong>Evidence.</strong> Each story that gets in is then scored on what it carries: a documented incursion — a first
             detection, a concession granted, an outbreak, construction begun (2); institutional material — IUCN,
             IPBES, CBD, a national inventory, satellite monitoring, peer review (2); a measured extent in hectares,
             kilometres or per cent (1); a forward projection (1); a named place (1); and a primary source (1).
@@ -220,7 +229,8 @@
         <button class="iv-sheet-close" data-close aria-label="Close">×</button>
         <p class="iv-note">
             Every wire read on the last harvest, with its standing: what it returned, and how many of its
-            stories were refused. A wire that could not be reached says so rather than disappearing.
+            stories were refused or dropped as too local. A wire that could not be reached says so rather than
+            disappearing.
         </p>
         <div class="iv-src-grid" id="ivSrcGrid"></div>
     </div>
@@ -365,7 +375,7 @@ async function load() {
     const ageH = state.generated ? (Date.now() - state.generated) / 3600000 : null;
     const docd = state.items.filter(i => i.score >= state.docScore).length;
     setStatus(
-        (c.stories || state.items.length) + ' stories · ' + docd + ' well-documented · ' +
+        (c.stories || state.items.length) + ' stories · ' + docd + ' well-documented · ' + (c.too_local ? c.too_local + ' too local · ' : '') +
         (c.refused ? c.refused + ' refused · ' : '') +
         (c.languages || new Set(state.items.map(i => i.lang)).size) + ' languages · ' +
         (c.wires_ok || '?') + '/' + (c.wires_total || '?') + ' wires answered · harvested ' +
@@ -558,7 +568,8 @@ function chipCounts() {
 function renderSources() {
     $srcGrid.innerHTML = state.sources.map(s =>
         '<div class="iv-src ' + (s.ok ? '' : 'fail') + '"><span>' + esc(s.name) + '</span>' +
-        '<span>' + (s.ok ? s.kept + ' kept' + (s.refused ? ' · ' + s.refused + ' refused' : '') : 'unreachable') +
+        '<span>' + (s.ok ? s.kept + ' kept' + (s.small ? ' · ' + s.small + ' too local' : '') +
+            (s.refused ? ' · ' + s.refused + ' refused' : '') : 'unreachable') +
         '</span></div>').join('');
 }
 

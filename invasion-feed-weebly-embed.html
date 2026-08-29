@@ -7,7 +7,7 @@
 <div id="galaxy-ivfeed-embed" style="width:100%;margin:0;padding:0;">
   <iframe id="galaxy-ivfeed-frame"
           title="Invasion — the crossing into the non-human world"
-          style="width:100%;border:0;display:block;background:#05070e;border-radius:14px;overflow:hidden;"
+          style="width:100%;border:0;display:block;background:#0c0d0b;border-radius:14px;overflow:hidden;"
           scrolling="no"
           referrerpolicy="no-referrer-when-downgrade"></iframe>
 </div>
@@ -28,21 +28,21 @@
    Everything scoped to .iv so it can be embedded anywhere.
    ============================================================ */
 .iv {
-    --ink: #eef2f8;
-    --ink-dim: #9aa8bd;
-    --ink-faint: #67748a;
+    --ink: #eae9e6;
+    --ink-dim: #a5a49c;
+    --ink-faint: #75746c;
     --line: rgba(255,255,255,0.10);
     --line-soft: rgba(255,255,255,0.06);
-    --accent: #86e08f;     /* green — live dot, title, progress */
-    --flag: #cf6fd8;       /* magenta — pressing marker */
-    --cool: #8fb4ff;
+    --accent: #9bb08a;     /* moss — live dot, title, progress */
+    --flag: #c08a86;       /* clay — well-documented marker */
+    --cool: #8ea2b8;
 
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--ink);
     background:
-        radial-gradient(1100px 520px at 88% -10%, rgba(35,105,95,0.26), transparent 60%),
-        radial-gradient(760px 420px at 4% 4%, rgba(80,55,130,0.20), transparent 58%),
-        linear-gradient(180deg, #05070e 0%, #0a0f1c 60%, #070b14 100%);
+        radial-gradient(1100px 520px at 88% -10%, rgba(58,74,60,0.30), transparent 60%),
+        radial-gradient(760px 420px at 4% 4%, rgba(74,64,72,0.22), transparent 58%),
+        linear-gradient(180deg, #0c0d0b 0%, #131311 60%, #0e0f0c 100%);
     line-height: 1.45;
     width: 100%;
     height: 100svh;
@@ -62,11 +62,11 @@
 
 /* ---------- Header ---------- */
 .iv-head { flex: 0 0 auto; display: flex; align-items: baseline; justify-content: space-between; gap: clamp(0.8rem, 3vw, 2.2rem); flex-wrap: wrap; max-width: 1320px; width: 100%; margin: 0 auto; }
-.iv-title { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(1.35rem, 2.9vw, 2.25rem); line-height: 1.05; letter-spacing: -0.015em; margin: 0; color: #fbfcfe; display: flex; align-items: center; gap: 0.55rem; }
+.iv-title { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(1.35rem, 2.9vw, 2.25rem); line-height: 1.05; letter-spacing: -0.015em; margin: 0; color: #f7f6f3; display: flex; align-items: center; gap: 0.55rem; }
 .iv-title em { font-style: italic; color: var(--accent); }
-.iv-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 4px rgba(74,222,128,0.14); animation: iv-pulse 2.6s ease-in-out infinite; flex: 0 0 auto; }
-.iv-dot.idle { background: #94a3b8; box-shadow: 0 0 0 4px rgba(148,163,184,0.12); animation: none; }
-.iv-dot.error { background: #f87171; box-shadow: 0 0 0 4px rgba(248,113,113,0.14); animation: none; }
+.iv-dot { width: 8px; height: 8px; border-radius: 50%; background: #9bb08a; box-shadow: 0 0 0 4px rgba(155,176,138,0.16); animation: iv-pulse 2.6s ease-in-out infinite; flex: 0 0 auto; }
+.iv-dot.idle { background: #8a8880; box-shadow: 0 0 0 4px rgba(138,136,128,0.14); animation: none; }
+.iv-dot.error { background: #c08a86; box-shadow: 0 0 0 4px rgba(192,138,134,0.16); animation: none; }
 @keyframes iv-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 .iv-lede { font-size: clamp(0.63rem, 0.85vw, 0.72rem); color: var(--ink-dim); max-width: 62ch; margin: 0; line-height: 1.45; }
 .iv-lede strong { color: var(--ink); font-weight: 500; }
@@ -88,10 +88,10 @@
 .iv-filters { flex: 0 0 auto; display: flex; flex-direction: column; gap: 0.2rem; padding: 0.35rem 0.9rem; border-bottom: 1px solid var(--line-soft); }
 .iv-row { display: flex; align-items: center; gap: 0.35rem; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; padding-bottom: 1px; }
 .iv-row::-webkit-scrollbar { height: 0; }
-.iv-key { position: sticky; left: 0; z-index: 1; flex: 0 0 auto; font-size: 0.53rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); background: linear-gradient(90deg, #0a0f1c 72%, transparent); padding-right: 0.4rem; min-width: 62px; }
+.iv-key { position: sticky; left: 0; z-index: 1; flex: 0 0 auto; font-size: 0.53rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); background: linear-gradient(90deg, #131311 72%, transparent); padding-right: 0.4rem; min-width: 62px; }
 .iv-chip { flex: 0 0 auto; font-family: inherit; font-size: 0.62rem; color: var(--ink-dim); background: rgba(255,255,255,0.03); border: 1px solid var(--line-soft); border-radius: 999px; padding: 0.15rem 0.55rem; cursor: pointer; white-space: nowrap; }
 .iv-chip:hover { color: var(--ink); border-color: rgba(255,255,255,0.22); }
-.iv-chip.on { color: #08111f; background: var(--chipcolor, #e8eef7); border-color: transparent; font-weight: 500; }
+.iv-chip.on { color: #131311; background: var(--chipcolor, #d8d5cd); border-color: transparent; font-weight: 500; }
 .iv-chip .iv-n { opacity: 0.6; margin-left: 0.3rem; font-variant-numeric: tabular-nums; }
 .iv-chip.empty { opacity: 0.4; }
 
@@ -101,15 +101,15 @@
 .iv-item:hover { background: rgba(255,255,255,0.035); }
 .iv-item.watch { border-left: 2px solid var(--flag); }
 .iv-meta { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; font-size: 0.57rem; color: var(--ink-faint); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.2rem; }
-.iv-lang { color: #cbd6e6; background: rgba(255,255,255,0.07); border-radius: 4px; padding: 0.06rem 0.32rem; letter-spacing: 0.08em; }
+.iv-lang { color: #d5d2ca; background: rgba(255,255,255,0.07); border-radius: 4px; padding: 0.06rem 0.32rem; letter-spacing: 0.08em; }
 .iv-flag { color: var(--flag); border: 1px solid rgba(255,107,157,0.5); border-radius: 4px; padding: 0.04rem 0.3rem; }
 .iv-scale { display: inline-flex; gap: 2px; align-items: center; }
 .iv-pip { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.18); }
 .iv-pip.on { background: var(--accent); }
 .iv-why { color: var(--ink-faint); letter-spacing: 0.08em; }
 .iv-standing { border: 1px solid; border-radius: 999px; padding: 0.02rem 0.4rem; letter-spacing: 0.12em; }
-.iv-item-title { font-size: 0.79rem; font-weight: 500; line-height: 1.35; color: #f0f4fa; }
-.iv-item:hover .iv-item-title { color: var(--cool); }
+.iv-item-title { font-size: 0.79rem; font-weight: 500; line-height: 1.35; color: #f2f1ee; }
+.iv-item:hover .iv-item-title { color: var(--accent); }
 .iv-snip { font-size: 0.66rem; line-height: 1.45; color: var(--ink-dim); margin-top: 0.15rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .iv-tags { display: flex; gap: 0.28rem; flex-wrap: wrap; margin-top: 0.3rem; }
 .iv-t { font-size: 0.53rem; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid; border-radius: 999px; padding: 0.08rem 0.42rem; }
@@ -128,7 +128,7 @@
 .iv-src-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.1rem 0.9rem; }
 .iv-src { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.62rem; color: var(--ink-dim); padding: 0.14rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
 .iv-src span:last-child { font-variant-numeric: tabular-nums; color: var(--ink-faint); }
-.iv-src.fail span:last-child { color: #d98a8a; }
+.iv-src.fail span:last-child { color: #c08a86; }
 
 .iv-foot { flex: 0 0 auto; max-width: 1320px; width: 100%; margin: 0 auto; padding-top: 0.4rem; border-top: 1px solid var(--line-soft); font-size: 0.57rem; color: var(--ink-faint); line-height: 1.4; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
 .iv-foot-tools { display: flex; gap: 0.35rem; flex: 0 0 auto; }
@@ -146,7 +146,7 @@
 }
 </style>
 </head>
-<body style="margin:0; background:#05070e;">
+<body style="margin:0; background:#0c0d0b;">
 <div class="iv">
 
     <header class="iv-head">
@@ -154,6 +154,7 @@
         <p class="iv-lede">
             <strong>Worldwide, in 25 languages.</strong>
             The invaded here are always non-human: wild animals, plants, fungi and the systems they make.
+            Only findings that reach past one place — a spread, a number, a mechanism, a consequence.
         </p>
     </header>
 
@@ -209,7 +210,15 @@
             under both.
         </p>
         <p class="iv-note">
-            <strong>Evidence.</strong> Each story is scored on what it carries: a documented incursion — a first
+            <strong>Scale.</strong> Being on subject is not enough. A single species turning up in one county
+            reads as a register entry, and it is dropped. A story has to reach past one place: a global or
+            regional spread (2 and 1), a systemic mechanism — collapse, cascade, irreversible, unprecedented,
+            established across (2), a number (1), a consequence for people or a system (1), or a generalising
+            study (1). Below two points nothing enters, and the status line reports how many were turned away
+            as too local on the last harvest.
+        </p>
+        <p class="iv-note">
+            <strong>Evidence.</strong> Each story that gets in is then scored on what it carries: a documented incursion — a first
             detection, a concession granted, an outbreak, construction begun (2); institutional material — IUCN,
             IPBES, CBD, a national inventory, satellite monitoring, peer review (2); a measured extent in hectares,
             kilometres or per cent (1); a forward projection (1); a named place (1); and a primary source (1).
@@ -235,7 +244,8 @@
         <button class="iv-sheet-close" data-close aria-label="Close">×</button>
         <p class="iv-note">
             Every wire read on the last harvest, with its standing: what it returned, and how many of its
-            stories were refused. A wire that could not be reached says so rather than disappearing.
+            stories were refused or dropped as too local. A wire that could not be reached says so rather than
+            disappearing.
         </p>
         <div class="iv-src-grid" id="ivSrcGrid"></div>
     </div>
@@ -260,22 +270,24 @@ const ENDPOINTS = [
     () => 'https://cdn.jsdelivr.net/gh/' + REPO + '@' + BRANCH + '/wire_invasion.json'
 ];
 
+// Earth tones: moss, sage, clay, slate, mauve, taupe. Nothing neon, and
+// nothing in the orange or yellow band.
 const TOPIC_COLOR = {
-    frontier: '#e0607f',       // rose
-    remote: '#9fb8ff',         // indigo
-    invasive: '#86e08f',       // green
-    pathogens: '#cf6fd8',      // magenta
-    pathways: '#6fd3ff',       // cyan
-    displacement: '#e29ad8',   // pink
-    control: '#8de6c8',        // mint
-    law: '#6f9bff',            // azure
-    climate: '#a98cf0',        // violet
-    impact: '#7fd3d8'          // teal
+    frontier: '#c08a86',       // clay
+    remote: '#8ea2b8',         // slate blue
+    invasive: '#9bb08a',       // moss
+    pathogens: '#b193a8',      // mauve
+    pathways: '#86a5a5',       // weathered teal
+    displacement: '#c4a6a2',   // dusty rose
+    control: '#a8b79a',        // sage
+    law: '#93a3c0',            // dusty blue
+    climate: '#a496b8',        // muted violet
+    impact: '#a9a49a'          // taupe
 };
 const STANDING_COLOR = {
-    official: '#9fb8ff', science: '#8de6c8', field: '#86e08f', press: '#9fb0c8'
+    official: '#93a3c0', science: '#a8b79a', field: '#9bb08a', press: '#a49f98'
 };
-const KIND_COLOR = { human: '#e0607f', species: '#86e08f' };
+const KIND_COLOR = { human: '#c08a86', species: '#9bb08a' };
 const WINDOWS = [
     { id: 'd1', label: '24 hours', ms: 864e5 },
     { id: 'd7', label: '7 days', ms: 7 * 864e5 },
@@ -378,7 +390,7 @@ async function load() {
     const ageH = state.generated ? (Date.now() - state.generated) / 3600000 : null;
     const docd = state.items.filter(i => i.score >= state.docScore).length;
     setStatus(
-        (c.stories || state.items.length) + ' stories · ' + docd + ' well-documented · ' +
+        (c.stories || state.items.length) + ' stories · ' + docd + ' well-documented · ' + (c.too_local ? c.too_local + ' too local · ' : '') +
         (c.refused ? c.refused + ' refused · ' : '') +
         (c.languages || new Set(state.items.map(i => i.lang)).size) + ' languages · ' +
         (c.wires_ok || '?') + '/' + (c.wires_total || '?') + ' wires answered · harvested ' +
@@ -425,11 +437,11 @@ function render() {
     } else {
         $list.innerHTML = slice.map(i => {
             const tags = i.topics.map(id => {
-                const c = TOPIC_COLOR[id] || '#9fb0c8';
+                const c = TOPIC_COLOR[id] || '#a49f98';
                 return '<span class="iv-t" style="color:' + c + ';border-color:' + c + '55">' + esc(topicLabel(id)) + '</span>';
             }).join('');
             const documented = i.score >= state.docScore;
-            const sc = STANDING_COLOR[i.standing] || '#9fb0c8';
+            const sc = STANDING_COLOR[i.standing] || '#a49f98';
             const stLabel = (state.standings.find(s => s.id === i.standing) || {}).label || i.standing;
             const pips = '<span class="iv-scale" title="evidence score ' + i.score + '">' +
                 [1,2,3,4,5].map(n => '<span class="iv-pip' + (n <= Math.min(i.score,5) ? ' on' : '') + '"></span>').join('') +
@@ -438,7 +450,7 @@ function render() {
                 '<div class="iv-meta"><span class="iv-lang">' + esc(langName(i.lang)) + '</span>' +
                 '<span class="iv-standing" style="color:' + sc + ';border-color:' + sc + '55">' + esc(stLabel) + '</span>' +
                 i.kinds.map(k => {
-                    const kc = KIND_COLOR[k] || '#9fb0c8';
+                    const kc = KIND_COLOR[k] || '#a49f98';
                     const kl = (state.kindList.find(x => x.id === k) || {}).label || k;
                     return '<span class="iv-standing" style="color:' + kc + ';border-color:' + kc + '55">' + esc(kl) + '</span>';
                 }).join('') +
@@ -491,14 +503,14 @@ function buildChips() {
     chip($standingRow, 'standing', 'all', 'All').classList.add('on');
     state.standings.forEach(st => {
         const c = chip($standingRow, 'standing', st.id, st.label);
-        c.style.setProperty('--chipcolor', STANDING_COLOR[st.id] || '#e8eef7');
+        c.style.setProperty('--chipcolor', STANDING_COLOR[st.id] || '#d8d5cd');
         if (st.id === state.standing) c.classList.add('on');
     });
 
     chip($kindRow, 'kind', 'all', 'Both').classList.add('on');
     (state.kindList || []).forEach(k => {
         const c = chip($kindRow, 'kind', k.id, k.label);
-        c.style.setProperty('--chipcolor', KIND_COLOR[k.id] || '#e8eef7');
+        c.style.setProperty('--chipcolor', KIND_COLOR[k.id] || '#d8d5cd');
         if (k.id === state.kind) c.classList.add('on');
     });
 
@@ -507,6 +519,10 @@ function buildChips() {
         if (e.id === state.evidence) c.classList.add('on');
     });
 
+    // an explicit All chip: without one the only way back from a single
+    // language was to untick it again
+    const allLang = chip($langRow, 'lang', 'all', 'All languages');
+    if (!state.langs.size) allLang.classList.add('on');
     Object.keys(state.languages).sort((a, b) => langName(a).localeCompare(langName(b)))
         .forEach(code => chip($langRow, 'lang', code, langName(code)));
 
@@ -551,9 +567,10 @@ function chipCounts() {
             id === 'doc' ? base.filter(i => i.score >= state.docScore).length : base.length;
     });
     $langRow.querySelectorAll('.iv-chip').forEach(c => {
-        const n = base.filter(i => i.lang === c.dataset.lang).length;
+        const code = c.dataset.lang;
+        const n = code === 'all' ? base.length : base.filter(i => i.lang === code).length;
         c.querySelector('.iv-n').textContent = n;
-        c.classList.toggle('empty', n === 0);
+        c.classList.toggle('empty', n === 0 && code !== 'all');
     });
     $whenRow.querySelectorAll('.iv-chip').forEach(c => {
         const n = state.items.filter(i => withinWindow(i, c.dataset.when)).length;
@@ -566,7 +583,8 @@ function chipCounts() {
 function renderSources() {
     $srcGrid.innerHTML = state.sources.map(s =>
         '<div class="iv-src ' + (s.ok ? '' : 'fail') + '"><span>' + esc(s.name) + '</span>' +
-        '<span>' + (s.ok ? s.kept + ' kept' + (s.refused ? ' · ' + s.refused + ' refused' : '') : 'unreachable') +
+        '<span>' + (s.ok ? s.kept + ' kept' + (s.small ? ' · ' + s.small + ' too local' : '') +
+            (s.refused ? ' · ' + s.refused + ' refused' : '') : 'unreachable') +
         '</span></div>').join('');
 }
 
@@ -589,8 +607,16 @@ single($whenRow, 'when');
 $langRow.addEventListener('click', e => {
     const c = e.target.closest('.iv-chip'); if (!c) return;
     const code = c.dataset.lang;
-    if (state.langs.has(code)) state.langs.delete(code); else state.langs.add(code);
-    c.classList.toggle('on', state.langs.has(code));
+    if (code === 'all') {
+        state.langs.clear();
+    } else if (state.langs.has(code)) {
+        state.langs.delete(code);
+    } else {
+        state.langs.add(code);
+    }
+    // All is lit exactly when no single language is picked
+    $langRow.querySelectorAll('.iv-chip').forEach(x => x.classList.toggle('on',
+        x.dataset.lang === 'all' ? !state.langs.size : state.langs.has(x.dataset.lang)));
     state.shown = 50; render();
 });
 
@@ -605,7 +631,7 @@ document.getElementById('ivClear').addEventListener('click', () => {
     $evidenceRow.querySelectorAll('.iv-chip').forEach(c => c.classList.toggle('on', c.dataset.evidence === 'all'));
     $kindRow.querySelectorAll('.iv-chip').forEach(c => c.classList.toggle('on', c.dataset.kind === 'all'));
     $geoRow.querySelectorAll('.iv-chip').forEach(c => c.classList.toggle('on', c.dataset.place === 'all'));
-    $langRow.querySelectorAll('.iv-chip').forEach(c => c.classList.remove('on'));
+    $langRow.querySelectorAll('.iv-chip').forEach(c => c.classList.toggle('on', c.dataset.lang === 'all'));
     $whenRow.querySelectorAll('.iv-chip').forEach(c => c.classList.toggle('on', c.dataset.when === 'all'));
     render();
 });

@@ -471,7 +471,11 @@ INVASION = [
     "avian influenza", "h5n1", "ranavirus", "sea star wasting", "epizootic",
     "range shift*", "range expansion", "shifting poleward", "poleward shift",
     "tropicalisation", "tropicalization",
-    "especie invasora", "especies exóticas invasoras", "espécie invasora",
+    "especie invasora", "especies invasoras", "especies exóticas invasoras",
+    "espécie invasora", "espécies invasoras", "espécies exóticas invasoras",
+    "specie invasive", "gatunki inwazyjne", "invasive arten", "invasiven arten",
+    "invasiver arten", "gebietsfremde arten", "invasieve exoten",
+    "invasiva arter", "инвазивные виды", "інвазивні види", "istilacı türler",
     "espèce envahissante", "espèces exotiques envahissantes", "invasive art", "neobiota",
     "specie invasiva", "specie aliene", "gatunek inwazyjny", "invasiv art", "främmande art",
     "invasieve exoot", "uitheemse soort", "инвазивн", "чужеродн", "інвазивн",
@@ -527,6 +531,72 @@ BLOCK = [
     "eradicate hunger", "eradicating corruption", "eradicate disease in humans",
 ]
 
+
+# --------------------------------------------------------------------------
+# Scale. Being on subject is not enough. A single species turning up in one
+# county reads as a register entry; what belongs here is the finding that
+# travels — a spread across a region, a number, a mechanism, a consequence for
+# people or for a system. Below KEEP_SCALE a story never enters the feed.
+# --------------------------------------------------------------------------
+KEEP_SCALE = 2
+
+SCOPE_GLOBAL = [
+    "global*", "worldwide", "world's", "planet*", "earth's", "across the world",
+    "around the world", "international study", "every continent", "all continents",
+    "across countries", "in dozens of countries", "humanity",
+    "mondial*", "mundial*", "weltweit*", "globale", "global*", "по всему миру", "глобальн",
+    "全球", "世界", "全世界", "전 세계", "عالمي", "वैश्विक", "বিশ্বব্যাপী", "küresel",
+    "toàn cầu", "ทั่วโลก", "duniani", "παγκόσμι", "wereldwijd", "światow",
+]
+SCOPE_REGION = [
+    "amazon", "congo basin", "arctic", "antarctic*", "himalaya*", "andes", "sahel",
+    "mediterranean", "great barrier reef", "coral triangle", "boreal", "siberia",
+    "pacific", "atlantic", "indian ocean", "southern ocean", "caribbean", "mekong",
+    "great lakes", "murray-darling", "horn of africa", "central asia", "southeast asia",
+    "west africa", "east africa", "latin america", "south america", "north america",
+    "europe", "asia", "africa", "oceania", "continent*", "nationwide", "countrywide",
+    "across the country", "across europe", "across asia", "across africa", "basin-wide",
+    "several states", "multiple states", "several countries", "region-wide",
+]
+SYSTEMIC = [
+    "tipping point*", "collapse", "cascade", "irreversible", "threshold", "regime shift",
+    "mass extinction", "unprecedented", "record high", "record low", "first time on record",
+    "spreading rapidly", "out of control", "no longer containable", "established across",
+    "global assessment", "meta-analysis", "systematic review", "ipbes", "iucn red list",
+    "widespread", "accelerating", "turning point", "point of no return",
+    "effondrement", "colapso", "kollaps", "коллапс", "崩壊", "崩溃", "붕괴",
+    "punto de inflexión", "point de bascule", "kipppunkt",
+]
+CONSEQUENCE = [
+    "people", "communities", "livelihood*", "food security", "water security", "crops",
+    "harvest*", "fisheries", "economic cost*", "costs billions", "billions", "millions",
+    "public health", "disease risk", "drinking water", "famine", "displaced",
+    "extinction risk", "threatened with extinction", "endangered", "wiped out",
+    "ecosystem collapse", "ecosystem services", "cost", "costs", "damage", "losses",
+    "economy", "bill for", "price tag",
+]
+FINDING = [
+    "study finds", "study shows", "new study", "research finds", "researchers found",
+    "scientists say", "report finds", "report warns", "analysis of", "assessment finds",
+    "data shows", "peer-reviewed", "survey of", "modelling", "modeling",
+    "étude", "estudio", "estudo", "studie", "onderzoek", "исследование", "研究", "調査",
+    "연구", "دراسة", "अध्ययन", "penelitian", "araştırma", "nghiên cứu", "μελέτη",
+]
+# "across three states", "several countries" — spread written in words rather
+# than digits, which the magnitude patterns would otherwise miss
+REGION_RX = re.compile(
+    r"\b(two|three|four|five|six|seven|eight|nine|ten|dozens|several|multiple|many)\s+"
+    r"(states|countries|regions|provinces|islands|rivers|nations|counties|districts)\b", re.I)
+
+MAGNITUDE_RX = [
+    re.compile(r"\b\d[\d.,]*\s?(%|percent|per cent)", re.I),
+    re.compile(r"\b\d[\d.,]*\s?(billion|million|thousand|bn)\b", re.I),
+    re.compile(r"\b\d[\d.,]*\s?(hectares?|acres?|square kilometres?|square kilometers?|km2|km²)\b", re.I),
+    re.compile(r"\b\d[\d.,]*\s?(species|countries|states|rivers|islands|sites|populations)\b", re.I),
+    re.compile(r"\b(million|billion|trillion)s?\b", re.I),
+    re.compile(r"(millones|milhões|milliards?|millionen|миллион|亿|百万|億|만|مليون|juta)", re.I),
+]
+
 # --------------------------------------------------------------------------
 # Pressure. Standing says who is speaking; this says how much is happening.
 # --------------------------------------------------------------------------
@@ -564,6 +634,11 @@ DOCUMENTED_C = _compile_all(DOCUMENTED)
 INSTITUTIONAL_C = _compile_all(INSTITUTIONAL)
 MEASURED_C = _compile_all(MEASURED)
 PROJECTED_C = _compile_all(PROJECTED)
+GLOBAL_C = _compile_all(SCOPE_GLOBAL)
+REGION_C = _compile_all(SCOPE_REGION)
+SYSTEMIC_C = _compile_all(SYSTEMIC)
+CONSEQUENCE_C = _compile_all(CONSEQUENCE)
+FINDING_C = _compile_all(FINDING)
 TOPICS_C = [(tid, label, [(_compile(t), _compile_all(g) if g else None) for t, g in terms])
             for tid, label, terms in TOPICS]
 GEO_C = [(gid, label, [(_compile(t), _compile_all(g) if g else None) for t, g in terms])
@@ -588,6 +663,30 @@ def kind_of(text):
     if hit(text, INCURSION_C) and hit(text, WILD_C):
         kinds.append("human")
     return kinds or ["species"]
+
+
+def scale(text):
+    """How far the finding reaches. Returns (score, reasons)."""
+    total, reasons = 0, []
+    if hit(text, GLOBAL_C):
+        total += 2
+        reasons.append("global")
+    elif hit(text, REGION_C) or REGION_RX.search(text):
+        total += 1
+        reasons.append("regional")
+    if hit(text, SYSTEMIC_C):
+        total += 2
+        reasons.append("systemic")
+    if any(rx.search(text) for rx in MAGNITUDE_RX):
+        total += 1
+        reasons.append("magnitude")
+    if hit(text, CONSEQUENCE_C):
+        total += 1
+        reasons.append("consequence")
+    if hit(text, FINDING_C):
+        total += 1
+        reasons.append("finding")
+    return total, reasons
 
 
 def pressure(text, standing, placed):
@@ -692,10 +791,10 @@ def run(dry_run=False, fixtures=None):
         items.append(row)
         return True
 
-    stats, ok_count, refused = [], 0, 0
+    stats, ok_count, refused, too_local = [], 0, 0, 0
     for src, raw in results:
         stat = {"name": src["name"], "lang": src["lang"], "standing": src["standing"],
-                "region": src["standing"], "kept": 0, "refused": 0, "ok": False}
+                "region": src["standing"], "kept": 0, "refused": 0, "small": 0, "ok": False}
         if raw:
             stat["ok"] = True
             ok_count += 1
@@ -707,12 +806,17 @@ def run(dry_run=False, fixtures=None):
                     continue
                 if not relevant(text):
                     continue
+                reach, reach_why = scale(text)
+                if reach < KEEP_SCALE:
+                    stat["small"] += 1
+                    too_local += 1
+                    continue
                 places = regions_for(text)
                 total, reasons = pressure(text, src["standing"], places != ["unlocated"])
                 row["x"] = topics_for(text) or ["invasive"]
                 row["w"] = places
                 row["p"] = total
-                row["y"] = reasons
+                row["y"] = reasons + reach_why
                 row["st"] = src["standing"]
                 row["k"] = kind_of(text)
                 if absorb(row):
@@ -720,7 +824,8 @@ def run(dry_run=False, fixtures=None):
         stats.append(stat)
         print("  %-36s %s" % (src["name"][:36],
                               "unreachable" if not raw
-                              else "%d kept, %d refused" % (stat["kept"], stat["refused"])))
+                              else "%d kept, %d too local, %d refused"
+                              % (stat["kept"], stat["small"], stat["refused"])))
 
     fresh_urls = {canon_url(i["u"]) for i in items}
     for row in previous:
@@ -735,7 +840,7 @@ def run(dry_run=False, fixtures=None):
 
     languages = {}
     for loc in cfg.get("gnews", []):
-        languages.setdefault(loc["lang"], re.sub(r"\s*\(.*\)$", "", loc["label"]))
+        languages.setdefault(loc["lang"], re.sub(r"\s*·.*$|\s*\(.*\)$", "", loc["label"]))
     languages.setdefault("en", "English")
 
     payload = {
@@ -745,7 +850,7 @@ def run(dry_run=False, fixtures=None):
                    "notable": sum(1 for i in items if i.get("p", 0) >= NOTABLE_SCORE),
                    "human": sum(1 for i in items if "human" in i.get("k", [])),
                    "species": sum(1 for i in items if "species" in i.get("k", [])),
-                   "refused": refused,
+                   "refused": refused, "too_local": too_local,
                    "wires_ok": ok_count, "wires_total": len(sources)},
         "notable_score": NOTABLE_SCORE,
         "languages": languages,
@@ -766,10 +871,10 @@ def run(dry_run=False, fixtures=None):
         "items": items,
     }
 
-    print("\n%d stories (%d new, %d pressing) · %d human incursion, %d species invasion · %d refused · %d languages · %d/%d wires answered"
+    print("\n%d stories (%d new, %d well documented) · %d human incursion, %d species invasion · %d dropped as too local · %d refused · %d languages · %d/%d wires answered"
           % (len(items), fresh, payload["counts"]["notable"], payload["counts"]["human"],
-             payload["counts"]["species"], refused, payload["counts"]["languages"],
-             ok_count, len(sources)))
+             payload["counts"]["species"], too_local, refused,
+             payload["counts"]["languages"], ok_count, len(sources)))
 
     if dry_run:
         print("\n--dry-run: wire_invasion.json not written")

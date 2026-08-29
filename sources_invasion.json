@@ -886,6 +886,60 @@
       "gl": "US",
       "ceid": "US:en",
       "query": "site:eurekalert.org invasive species OR habitat loss OR wildlife disease"
+    },
+    {
+      "label": "Global assessments",
+      "lang": "en",
+      "standing": "science",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"global study\" invasive species OR IPBES invasive alien species assessment OR \"worldwide decline\" native species OR \"global cost\" invasive"
+    },
+    {
+      "label": "Spread & fronts",
+      "lang": "en",
+      "standing": "science",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "invasive species spreading across OR \"established across\" states OR \"expanding range\" invasive OR \"no longer containable\""
+    },
+    {
+      "label": "Cost & consequence",
+      "lang": "en",
+      "standing": "science",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "invasive species cost billions OR crop losses invasive pest OR fisheries collapse invasive OR \"food security\" invasive species"
+    },
+    {
+      "label": "Frontier at scale",
+      "lang": "en",
+      "standing": "science",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"hectares of primary forest\" OR \"square kilometres\" cleared OR deforestation front expanding OR \"intact forest landscapes\" lost"
+    },
+    {
+      "label": "Estudio global (es)",
+      "lang": "es",
+      "standing": "science",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"estudio global\" especies invasoras OR \"coste\" especies invasoras OR deforestación hectáreas frontera"
+    },
+    {
+      "label": "Étude mondiale (fr)",
+      "lang": "fr",
+      "standing": "science",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"étude mondiale\" espèces envahissantes OR \"coût\" espèces envahissantes OR hectares déforestation front"
     }
   ]
 }
