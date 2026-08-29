@@ -1,5 +1,5 @@
 {
-  "_note": "Wires for the invasion feed: human incursion into intact and unexplored ecosystems, and the movement of species into ranges they did not evolve in. harvest_invasion.py reads this and writes wire_invasion.json. Each wire carries a 'standing': official, science, field or press. The 'events' block is aimed at concrete happenings — first detections, concessions granted, roads opened, outbreaks, eradications — rather than commentary. Each locale runs two queries — one for species invasion, one for human incursion — because a single query per language was returning too little. Institutional sources that publish no reliable RSS are read through site-scoped searches instead of guessed feed URLs.",
+  "_note": "Wires for the invasion feed: human incursion into intact and unexplored ecosystems, and the movement of species into ranges they did not evolve in. harvest_invasion.py reads this and writes wire_invasion.json. Each wire carries a 'standing': official, science, field or press. The 'events' block is aimed at concrete happenings — first detections, concessions granted, roads opened, outbreaks, eradications — rather than commentary. Each locale runs two queries — one for species invasion, one for human incursion — because a single query per language was returning too little. Institutional sources that publish no reliable RSS are read through site-scoped searches instead of guessed feed URLs. Seven direct feeds were removed after the first live run returned 404 or 403 for them (USGS, CBD, FAO, EPPO, Invasive Species Council AU, Survival International, EurekAlert); the same organisations are still read through the site-scoped searches in the events block.",
   "direct": [
     {
       "name": "IUCN",
@@ -8,34 +8,10 @@
       "url": "https://iucn.org/rss.xml"
     },
     {
-      "name": "CBD — Convention on Biological Diversity",
-      "lang": "en",
-      "standing": "official",
-      "url": "https://www.cbd.int/rss/news.xml"
-    },
-    {
       "name": "UNEP",
       "lang": "en",
       "standing": "official",
       "url": "https://www.unep.org/rss.xml"
-    },
-    {
-      "name": "FAO — news",
-      "lang": "en",
-      "standing": "official",
-      "url": "https://www.fao.org/feeds/news-rss/en/"
-    },
-    {
-      "name": "USGS",
-      "lang": "en",
-      "standing": "official",
-      "url": "https://www.usgs.gov/news/feed"
-    },
-    {
-      "name": "EPPO — plant health alerts",
-      "lang": "en",
-      "standing": "official",
-      "url": "https://www.eppo.int/media/rss/reporting"
     },
     {
       "name": "WOAH — animal health",
@@ -110,18 +86,6 @@
       "url": "https://www.theguardian.com/environment/rss"
     },
     {
-      "name": "Survival International",
-      "lang": "en",
-      "standing": "field",
-      "url": "https://www.survivalinternational.org/rss/news"
-    },
-    {
-      "name": "Invasive Species Council (AU)",
-      "lang": "en",
-      "standing": "field",
-      "url": "https://invasives.org.au/feed/"
-    },
-    {
       "name": "Predator Free NZ",
       "lang": "en",
       "standing": "field",
@@ -150,12 +114,6 @@
       "lang": "en",
       "standing": "science",
       "url": "https://phys.org/rss-feed/biology-news/"
-    },
-    {
-      "name": "EurekAlert — Biology",
-      "lang": "en",
-      "standing": "science",
-      "url": "https://www.eurekalert.org/rss/biology.xml"
     },
     {
       "name": "Down To Earth",
@@ -910,6 +868,24 @@
       "gl": "US",
       "ceid": "US:en",
       "query": "\"national park\" agency OR \"wildlife service\" invasive OR encroachment OR concession"
+    },
+    {
+      "label": "Survival Intl & land defenders",
+      "lang": "en",
+      "standing": "official",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "site:survivalinternational.org OR site:forestpeoples.org loggers OR miners OR territory"
+    },
+    {
+      "label": "EurekAlert biology",
+      "lang": "en",
+      "standing": "official",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "site:eurekalert.org invasive species OR habitat loss OR wildlife disease"
     }
   ]
 }
