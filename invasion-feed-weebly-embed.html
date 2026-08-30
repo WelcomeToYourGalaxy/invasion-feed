@@ -102,7 +102,7 @@
 .iv-chip.empty { opacity: 0.4; }
 
 .iv-tr { display: flex; align-items: center; gap: 0.25rem; flex: 0 0 auto; position: sticky;
-    left: 62px; z-index: 2; background: linear-gradient(90deg, var(--rowbg, #0a0f1c) 82%, transparent);
+    left: 62px; z-index: 2; background: linear-gradient(90deg, var(--rowbg, #131311) 82%, transparent);
     padding-right: 0.5rem; }
 .iv-trlabel { font-size: 0.53rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint); }
 .iv-tr select { font-family: inherit; font-size: 0.62rem; color: var(--ink);
@@ -194,11 +194,12 @@
 .iv-map .leaflet-control-attribution { background: rgba(19,19,17,0.8); color: var(--ink-faint); font-size: 0.5rem; }
 .iv-map .leaflet-control-attribution a { color: var(--ink-dim); }
 
-@media (max-width: 1200px) {
-    .iv-body { flex-direction: column; }
-    .iv-body > .iv-list { flex: 1 1 auto; min-height: 140px; }
-    .iv-map-wrap { flex: 0 0 52%; height: auto; min-height: 200px;
-        border-left: 0; border-top: 1px solid var(--line-soft); } }
+/* The map keeps its column beside the list at every width. Below 900px it
+   narrows rather than moving underneath — there is no companion panel here
+   competing for the height, so nothing has to go below the fold. */
+@media (max-width: 900px) {
+    .iv-map-wrap { flex: 0 0 34%; min-width: 150px; }
+}
 </style>
 </head>
 <body style="margin:0; background:#0c0d0b;">
@@ -350,16 +351,16 @@ const ENDPOINTS = [
 // Earth tones: moss, sage, clay, slate, mauve, taupe. Nothing neon, and
 // nothing in the orange or yellow band.
 const TOPIC_COLOR = {
-    frontier: '#c08a86',       // clay
+    frontier: '#b58080',       // clay
     remote: '#8ea2b8',         // slate blue
-    invasive: '#9bb08a',       // moss
-    pathogens: '#b193a8',      // mauve
-    pathways: '#86a5a5',       // weathered teal
-    displacement: '#c4a6a2',   // dusty rose
-    control: '#a8b79a',        // sage
-    law: '#93a3c0',            // dusty blue
-    climate: '#a496b8',        // muted violet
-    impact: '#a9a49a'          // taupe
+    invasive: '#a8b79a',       // moss
+    pathogens: '#c08a86',      // mauve
+    pathways: '#a496b8',       // weathered teal
+    displacement: '#a9a49a',   // dusty rose
+    control: '#86a5a5',        // sage
+    law: '#c4a6a2',            // dusty blue
+    climate: '#93a3c0',        // muted violet
+    impact: '#b193a8'          // taupe
 };
 const STANDING_COLOR = {
     official: '#93a3c0', science: '#a8b79a', field: '#9bb08a', press: '#a49f98'
