@@ -1,3 +1,21 @@
+<!-- ============================================================
+     Impact Watch — near-Earth objects, worldwide · Weebly embed
+     Paste this whole block into a Weebly "Embed Code" element.
+
+     HEIGHT. The frame is a fixed 1500px, written into the tag below in both the
+     height attribute and the style, so it exists before any script runs and
+     nothing moves it afterwards. To change the length, change BOTH numbers.
+     ============================================================ -->
+<div id="galaxy-neofeed-embed" style="width:100%;margin:0;padding:0;">
+  <iframe id="galaxy-neofeed-frame"
+          title="Impact Watch — near-Earth objects, worldwide"
+          height="1500"
+          style="width:100%;height:1500px;border:0;display:block;background:#0c0d0b;border-radius:14px;overflow:hidden;"
+          scrolling="no"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+
+<script type="text/plain" id="galaxy-neofeed-doc">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="">@@GALAXY_END_SCRIPT@@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Marcellus&display=swap');
 /* ============================================================
@@ -1253,6 +1271,21 @@ function openPinPopup(entry) {
 }
 
 })();
-</script>
+@@GALAXY_END_SCRIPT@@
 </body>
 </html>
+
+</script>
+
+<script>
+/* Embed shell — build 2026-08-30g. Injects the document, nothing else. */
+(function () {
+    var frame = document.getElementById('galaxy-neofeed-frame');
+    var store = document.getElementById('galaxy-neofeed-doc');
+    if (!frame || !store) return;
+    var doc = store.textContent.split('@@GALAXY_END_SCRIPT@@').join('<' + '/script>');
+    try { console.info('neo-feed: embed build 2026-08-30g'); } catch (e) {}
+    if ('srcdoc' in frame) { frame.srcdoc = doc; }
+    else { var d = frame.contentWindow.document; d.open(); d.write(doc); d.close(); }
+})();
+</script>
