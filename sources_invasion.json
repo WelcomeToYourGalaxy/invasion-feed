@@ -1,5 +1,5 @@
 {
-  "_note": "Wires for the invasion feed: human incursion into intact and unexplored ecosystems, and the movement of species into ranges they did not evolve in. harvest_invasion.py reads this and writes wire_invasion.json. Each wire carries a 'standing': official, science, field or press. The 'events' block is aimed at concrete happenings — first detections, concessions granted, roads opened, outbreaks, eradications — rather than commentary. Each locale runs two queries — one for species invasion, one for human incursion — because a single query per language was returning too little. Institutional sources that publish no reliable RSS are read through site-scoped searches instead of guessed feed URLs. Seven direct feeds were removed after the first live run returned 404 or 403 for them (USGS, CBD, FAO, EPPO, Invasive Species Council AU, Survival International, EurekAlert); the same organisations are still read through the site-scoped searches in the events block.",
+  "_note": "Wires for the invasion feed: human incursion into intact and unexplored ecosystems, and the movement of species into ranges they did not evolve in. harvest_invasion.py reads this and writes wire_invasion.json. Each wire carries a 'standing': official, science, field or press. The 'events' block is aimed at concrete happenings — first detections, concessions granted, roads opened, outbreaks, eradications — rather than commentary. Each locale runs two queries — one for species invasion, one for human incursion — because a single query per language was returning too little. Institutional sources that publish no reliable RSS are read through site-scoped searches instead of guessed feed URLs. Seven direct feeds were removed after the first live run returned 404 or 403 for them (USGS, CBD, FAO, EPPO, Invasive Species Council AU, Survival International, EurekAlert); the same organisations are still read through the site-scoped searches in the events block. Locale coverage is expanded: several country editions per language, and each query split into slices so no single search hits Google News's ~100-result cap.",
   "direct": [
     {
       "name": "IUCN",
@@ -130,70 +130,385 @@
   ],
   "gnews": [
     {
-      "label": "English · species",
+      "label": "English (US) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-US",
       "gl": "US",
       "ceid": "US:en",
-      "query": "\"invasive species\" OR \"non-native species\" spread OR \"first detected\" invasive OR \"intact forest\" road OR wildlife disease outbreak"
+      "query": "\"invasive species\" OR \"non-native species\" spread OR \"first detected\" invasive"
     },
     {
-      "label": "English (UK) · species",
+      "label": "English (US) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"intact forest\" road OR wildlife disease outbreak"
+    },
+    {
+      "label": "English (GB) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-GB",
       "gl": "GB",
       "ceid": "GB:en",
-      "query": "\"invasive species\" OR biosecurity incursion OR \"non-native\" established OR \"ancient woodland\" development"
+      "query": "\"invasive species\" OR \"non-native species\" spread OR \"first detected\" invasive"
     },
     {
-      "label": "English (India) · species",
+      "label": "English (GB) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "\"intact forest\" road OR wildlife disease outbreak"
+    },
+    {
+      "label": "English (IN) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-IN",
       "gl": "IN",
       "ceid": "IN:en",
-      "query": "\"invasive species\" India OR forest diversion project OR \"eco-sensitive zone\" road OR wildlife corridor highway"
+      "query": "\"invasive species\" OR \"non-native species\" spread OR \"first detected\" invasive"
     },
     {
-      "label": "English (Aus) · species",
+      "label": "English (IN) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-IN",
+      "gl": "IN",
+      "ceid": "IN:en",
+      "query": "\"intact forest\" road OR wildlife disease outbreak"
+    },
+    {
+      "label": "English (UK) (US) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"invasive species\" OR biosecurity incursion OR \"non-native\" established"
+    },
+    {
+      "label": "English (UK) (US) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"ancient woodland\" development"
+    },
+    {
+      "label": "English (UK) (GB) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "\"invasive species\" OR biosecurity incursion OR \"non-native\" established"
+    },
+    {
+      "label": "English (UK) (GB) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "\"ancient woodland\" development"
+    },
+    {
+      "label": "English (UK) (IN) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-IN",
+      "gl": "IN",
+      "ceid": "IN:en",
+      "query": "\"invasive species\" OR biosecurity incursion OR \"non-native\" established"
+    },
+    {
+      "label": "English (UK) (IN) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-IN",
+      "gl": "IN",
+      "ceid": "IN:en",
+      "query": "\"ancient woodland\" development"
+    },
+    {
+      "label": "English (India) (US) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"invasive species\" India OR forest diversion project OR \"eco-sensitive zone\" road"
+    },
+    {
+      "label": "English (India) (US) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "wildlife corridor highway"
+    },
+    {
+      "label": "English (India) (GB) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "\"invasive species\" India OR forest diversion project OR \"eco-sensitive zone\" road"
+    },
+    {
+      "label": "English (India) (GB) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "wildlife corridor highway"
+    },
+    {
+      "label": "English (India) (IN) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-IN",
+      "gl": "IN",
+      "ceid": "IN:en",
+      "query": "\"invasive species\" India OR forest diversion project OR \"eco-sensitive zone\" road"
+    },
+    {
+      "label": "English (India) (IN) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-IN",
+      "gl": "IN",
+      "ceid": "IN:en",
+      "query": "wildlife corridor highway"
+    },
+    {
+      "label": "English (Aus) (AU) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-AU",
       "gl": "AU",
       "ceid": "AU:en",
-      "query": "\"invasive species\" OR feral pest program OR biosecurity incursion OR \"fire ants\" spread OR cane toad front"
+      "query": "\"invasive species\" OR feral pest program OR biosecurity incursion"
     },
     {
-      "label": "English (NZ) · species",
+      "label": "English (Aus) (AU) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-AU",
+      "gl": "AU",
+      "ceid": "AU:en",
+      "query": "\"fire ants\" spread OR cane toad front"
+    },
+    {
+      "label": "English (Aus) (US) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"invasive species\" OR feral pest program OR biosecurity incursion"
+    },
+    {
+      "label": "English (Aus) (US) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"fire ants\" spread OR cane toad front"
+    },
+    {
+      "label": "English (Aus) (GB) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "\"invasive species\" OR feral pest program OR biosecurity incursion"
+    },
+    {
+      "label": "English (Aus) (GB) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "\"fire ants\" spread OR cane toad front"
+    },
+    {
+      "label": "English (NZ) (NZ) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-NZ",
       "gl": "NZ",
       "ceid": "NZ:en",
-      "query": "\"Predator Free\" OR biosecurity incursion OR \"invasive species\" island eradication OR kauri dieback"
+      "query": "\"Predator Free\" OR biosecurity incursion OR \"invasive species\" island eradication"
     },
     {
-      "label": "English (Kenya) · species",
+      "label": "English (NZ) (NZ) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-NZ",
+      "gl": "NZ",
+      "ceid": "NZ:en",
+      "query": "kauri dieback"
+    },
+    {
+      "label": "English (NZ) (US) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"Predator Free\" OR biosecurity incursion OR \"invasive species\" island eradication"
+    },
+    {
+      "label": "English (NZ) (US) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "kauri dieback"
+    },
+    {
+      "label": "English (NZ) (GB) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "\"Predator Free\" OR biosecurity incursion OR \"invasive species\" island eradication"
+    },
+    {
+      "label": "English (NZ) (GB) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "kauri dieback"
+    },
+    {
+      "label": "English (Kenya) (KE) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-KE",
       "gl": "KE",
       "ceid": "KE:en",
-      "query": "\"invasive species\" OR prosopis spread OR wildlife corridor fenced OR conservancy land encroachment"
+      "query": "\"invasive species\" OR prosopis spread OR wildlife corridor fenced"
     },
     {
-      "label": "English (Nigeria) · species",
+      "label": "English (Kenya) (KE) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-KE",
+      "gl": "KE",
+      "ceid": "KE:en",
+      "query": "conservancy land encroachment"
+    },
+    {
+      "label": "English (Kenya) (US) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"invasive species\" OR prosopis spread OR wildlife corridor fenced"
+    },
+    {
+      "label": "English (Kenya) (US) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "conservancy land encroachment"
+    },
+    {
+      "label": "English (Kenya) (GB) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "\"invasive species\" OR prosopis spread OR wildlife corridor fenced"
+    },
+    {
+      "label": "English (Kenya) (GB) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "conservancy land encroachment"
+    },
+    {
+      "label": "English (Nigeria) (NG) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-NG",
       "gl": "NG",
       "ceid": "NG:en",
-      "query": "forest reserve encroachment OR \"invasive species\" OR logging concession forest OR wildlife trade seizure"
+      "query": "forest reserve encroachment OR \"invasive species\" OR logging concession forest"
     },
     {
-      "label": "English (S. Africa) · species",
+      "label": "English (Nigeria) (NG) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-NG",
+      "gl": "NG",
+      "ceid": "NG:en",
+      "query": "wildlife trade seizure"
+    },
+    {
+      "label": "English (Nigeria) (US) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "forest reserve encroachment OR \"invasive species\" OR logging concession forest"
+    },
+    {
+      "label": "English (Nigeria) (US) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "wildlife trade seizure"
+    },
+    {
+      "label": "English (Nigeria) (GB) 1",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "forest reserve encroachment OR \"invasive species\" OR logging concession forest"
+    },
+    {
+      "label": "English (Nigeria) (GB) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "wildlife trade seizure"
+    },
+    {
+      "label": "English (S. Africa) (ZA)",
       "lang": "en",
       "standing": "press",
       "hl": "en-ZA",
@@ -202,61 +517,331 @@
       "query": "\"alien invasive\" plants OR \"working for water\" clearing OR mining application protected area"
     },
     {
-      "label": "Español · species",
+      "label": "English (S. Africa) (US)",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"alien invasive\" plants OR \"working for water\" clearing OR mining application protected area"
+    },
+    {
+      "label": "English (S. Africa) (GB)",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "\"alien invasive\" plants OR \"working for water\" clearing OR mining application protected area"
+    },
+    {
+      "label": "Español (ES) 1",
       "lang": "es",
       "standing": "press",
       "hl": "es",
       "gl": "ES",
       "ceid": "ES:es",
-      "query": "\"especie invasora\" OR \"especies exóticas invasoras\" OR avance de la frontera OR bosque primario carretera"
+      "query": "\"especie invasora\" OR \"especies exóticas invasoras\" OR avance de la frontera"
     },
     {
-      "label": "Español (MX) · species",
+      "label": "Español (ES) 2",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es",
+      "gl": "ES",
+      "ceid": "ES:es",
+      "query": "bosque primario carretera"
+    },
+    {
+      "label": "Español (MX) 1",
       "lang": "es",
       "standing": "press",
       "hl": "es-419",
       "gl": "MX",
       "ceid": "MX:es-419",
-      "query": "\"especie invasora\" OR selva carretera proyecto OR concesión minera área natural OR pueblos aislados territorio"
+      "query": "\"especie invasora\" OR \"especies exóticas invasoras\" OR avance de la frontera"
     },
     {
-      "label": "Português · species",
+      "label": "Español (MX) 2",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es-419",
+      "gl": "MX",
+      "ceid": "MX:es-419",
+      "query": "bosque primario carretera"
+    },
+    {
+      "label": "Español (AR) 1",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es-419",
+      "gl": "AR",
+      "ceid": "AR:es-419",
+      "query": "\"especie invasora\" OR \"especies exóticas invasoras\" OR avance de la frontera"
+    },
+    {
+      "label": "Español (AR) 2",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es-419",
+      "gl": "AR",
+      "ceid": "AR:es-419",
+      "query": "bosque primario carretera"
+    },
+    {
+      "label": "Español (MX) (ES) 1",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es",
+      "gl": "ES",
+      "ceid": "ES:es",
+      "query": "\"especie invasora\" OR selva carretera proyecto OR concesión minera área natural"
+    },
+    {
+      "label": "Español (MX) (ES) 2",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es",
+      "gl": "ES",
+      "ceid": "ES:es",
+      "query": "pueblos aislados territorio"
+    },
+    {
+      "label": "Español (MX) (MX) 1",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es-419",
+      "gl": "MX",
+      "ceid": "MX:es-419",
+      "query": "\"especie invasora\" OR selva carretera proyecto OR concesión minera área natural"
+    },
+    {
+      "label": "Español (MX) (MX) 2",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es-419",
+      "gl": "MX",
+      "ceid": "MX:es-419",
+      "query": "pueblos aislados territorio"
+    },
+    {
+      "label": "Español (MX) (AR) 1",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es-419",
+      "gl": "AR",
+      "ceid": "AR:es-419",
+      "query": "\"especie invasora\" OR selva carretera proyecto OR concesión minera área natural"
+    },
+    {
+      "label": "Español (MX) (AR) 2",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es-419",
+      "gl": "AR",
+      "ceid": "AR:es-419",
+      "query": "pueblos aislados territorio"
+    },
+    {
+      "label": "Português (BR) 1",
       "lang": "pt",
       "standing": "press",
       "hl": "pt-BR",
       "gl": "BR",
       "ceid": "BR:pt-419",
-      "query": "\"espécie invasora\" OR garimpo terra indígena OR rodovia floresta amazônica OR isolados invasão território"
+      "query": "\"espécie invasora\" OR garimpo terra indígena OR rodovia floresta amazônica"
     },
     {
-      "label": "Français · species",
+      "label": "Português (BR) 2",
+      "lang": "pt",
+      "standing": "press",
+      "hl": "pt-BR",
+      "gl": "BR",
+      "ceid": "BR:pt-419",
+      "query": "isolados invasão território"
+    },
+    {
+      "label": "Português (PT) 1",
+      "lang": "pt",
+      "standing": "press",
+      "hl": "pt-BR",
+      "gl": "PT",
+      "ceid": "PT:pt-150",
+      "query": "\"espécie invasora\" OR garimpo terra indígena OR rodovia floresta amazônica"
+    },
+    {
+      "label": "Português (PT) 2",
+      "lang": "pt",
+      "standing": "press",
+      "hl": "pt-BR",
+      "gl": "PT",
+      "ceid": "PT:pt-150",
+      "query": "isolados invasão território"
+    },
+    {
+      "label": "Português (AO) 1",
+      "lang": "pt",
+      "standing": "press",
+      "hl": "pt-BR",
+      "gl": "AO",
+      "ceid": "AO:pt-150",
+      "query": "\"espécie invasora\" OR garimpo terra indígena OR rodovia floresta amazônica"
+    },
+    {
+      "label": "Português (AO) 2",
+      "lang": "pt",
+      "standing": "press",
+      "hl": "pt-BR",
+      "gl": "AO",
+      "ceid": "AO:pt-150",
+      "query": "isolados invasão território"
+    },
+    {
+      "label": "Français (FR) 1",
       "lang": "fr",
       "standing": "press",
       "hl": "fr",
       "gl": "FR",
       "ceid": "FR:fr",
-      "query": "\"espèce envahissante\" OR \"espèces exotiques envahissantes\" OR forêt primaire route OR orpaillage illégal forêt"
+      "query": "\"espèce envahissante\" OR \"espèces exotiques envahissantes\" OR forêt primaire route"
     },
     {
-      "label": "Deutsch · species",
+      "label": "Français (FR) 2",
+      "lang": "fr",
+      "standing": "press",
+      "hl": "fr",
+      "gl": "FR",
+      "ceid": "FR:fr",
+      "query": "orpaillage illégal forêt"
+    },
+    {
+      "label": "Français (BE) 1",
+      "lang": "fr",
+      "standing": "press",
+      "hl": "fr",
+      "gl": "BE",
+      "ceid": "BE:fr",
+      "query": "\"espèce envahissante\" OR \"espèces exotiques envahissantes\" OR forêt primaire route"
+    },
+    {
+      "label": "Français (BE) 2",
+      "lang": "fr",
+      "standing": "press",
+      "hl": "fr",
+      "gl": "BE",
+      "ceid": "BE:fr",
+      "query": "orpaillage illégal forêt"
+    },
+    {
+      "label": "Français (CA) 1",
+      "lang": "fr",
+      "standing": "press",
+      "hl": "fr",
+      "gl": "CA",
+      "ceid": "CA:fr",
+      "query": "\"espèce envahissante\" OR \"espèces exotiques envahissantes\" OR forêt primaire route"
+    },
+    {
+      "label": "Français (CA) 2",
+      "lang": "fr",
+      "standing": "press",
+      "hl": "fr",
+      "gl": "CA",
+      "ceid": "CA:fr",
+      "query": "orpaillage illégal forêt"
+    },
+    {
+      "label": "Deutsch (DE) 1",
       "lang": "de",
       "standing": "press",
       "hl": "de",
       "gl": "DE",
       "ceid": "DE:de",
-      "query": "invasive Art OR Neobiota Ausbreitung OR Urwald Straße OR Wildtierseuche Ausbruch"
+      "query": "invasive Art OR Neobiota Ausbreitung OR Urwald Straße"
     },
     {
-      "label": "Italiano · species",
+      "label": "Deutsch (DE) 2",
+      "lang": "de",
+      "standing": "press",
+      "hl": "de",
+      "gl": "DE",
+      "ceid": "DE:de",
+      "query": "Wildtierseuche Ausbruch"
+    },
+    {
+      "label": "Deutsch (AT) 1",
+      "lang": "de",
+      "standing": "press",
+      "hl": "de",
+      "gl": "AT",
+      "ceid": "AT:de",
+      "query": "invasive Art OR Neobiota Ausbreitung OR Urwald Straße"
+    },
+    {
+      "label": "Deutsch (AT) 2",
+      "lang": "de",
+      "standing": "press",
+      "hl": "de",
+      "gl": "AT",
+      "ceid": "AT:de",
+      "query": "Wildtierseuche Ausbruch"
+    },
+    {
+      "label": "Deutsch (CH) 1",
+      "lang": "de",
+      "standing": "press",
+      "hl": "de",
+      "gl": "CH",
+      "ceid": "CH:de",
+      "query": "invasive Art OR Neobiota Ausbreitung OR Urwald Straße"
+    },
+    {
+      "label": "Deutsch (CH) 2",
+      "lang": "de",
+      "standing": "press",
+      "hl": "de",
+      "gl": "CH",
+      "ceid": "CH:de",
+      "query": "Wildtierseuche Ausbruch"
+    },
+    {
+      "label": "Italiano (IT) 1",
       "lang": "it",
       "standing": "press",
       "hl": "it",
       "gl": "IT",
       "ceid": "IT:it",
-      "query": "\"specie invasiva\" OR \"specie aliene\" diffusione OR granchio blu OR area protetta strada"
+      "query": "\"specie invasiva\" OR \"specie aliene\" diffusione OR granchio blu"
     },
     {
-      "label": "Nederlands · species",
+      "label": "Italiano (IT) 2",
+      "lang": "it",
+      "standing": "press",
+      "hl": "it",
+      "gl": "IT",
+      "ceid": "IT:it",
+      "query": "area protetta strada"
+    },
+    {
+      "label": "Italiano (CH) 1",
+      "lang": "it",
+      "standing": "press",
+      "hl": "it",
+      "gl": "CH",
+      "ceid": "CH:it",
+      "query": "\"specie invasiva\" OR \"specie aliene\" diffusione OR granchio blu"
+    },
+    {
+      "label": "Italiano (CH) 2",
+      "lang": "it",
+      "standing": "press",
+      "hl": "it",
+      "gl": "CH",
+      "ceid": "CH:it",
+      "query": "area protetta strada"
+    },
+    {
+      "label": "Nederlands (NL)",
       "lang": "nl",
       "standing": "press",
       "hl": "nl",
@@ -265,7 +850,16 @@
       "query": "invasieve exoot OR uitheemse soort verspreiding OR natuurgebied aantasting"
     },
     {
-      "label": "Svenska · species",
+      "label": "Nederlands (BE)",
+      "lang": "nl",
+      "standing": "press",
+      "hl": "nl",
+      "gl": "BE",
+      "ceid": "BE:nl",
+      "query": "invasieve exoot OR uitheemse soort verspreiding OR natuurgebied aantasting"
+    },
+    {
+      "label": "Svenska",
       "lang": "sv",
       "standing": "press",
       "hl": "sv",
@@ -274,16 +868,25 @@
       "query": "invasiv art OR främmande art spridning OR gammelskog avverkning"
     },
     {
-      "label": "Ελληνικά · species",
+      "label": "Ελληνικά 1",
       "lang": "el",
       "standing": "press",
       "hl": "el",
       "gl": "GR",
       "ceid": "GR:el",
-      "query": "χωροκατακτητικά είδη OR εισβολικό είδος OR λαγοκέφαλος OR προστατευόμενη περιοχή δρόμος"
+      "query": "χωροκατακτητικά είδη OR εισβολικό είδος OR λαγοκέφαλος"
     },
     {
-      "label": "Polski · species",
+      "label": "Ελληνικά 2",
+      "lang": "el",
+      "standing": "press",
+      "hl": "el",
+      "gl": "GR",
+      "ceid": "GR:el",
+      "query": "προστατευόμενη περιοχή δρόμος"
+    },
+    {
+      "label": "Polski",
       "lang": "pl",
       "standing": "press",
       "hl": "pl",
@@ -292,16 +895,61 @@
       "query": "gatunek inwazyjny OR obcy gatunek rozprzestrzenianie OR puszcza wycinka"
     },
     {
-      "label": "Русский · species",
+      "label": "Русский (RU) 1",
       "lang": "ru",
       "standing": "press",
       "hl": "ru",
       "gl": "RU",
       "ceid": "RU:ru",
-      "query": "инвазивный вид OR чужеродный вид распространение OR вырубка тайги дорога OR вспышка болезни диких животных"
+      "query": "инвазивный вид OR чужеродный вид распространение OR вырубка тайги дорога"
     },
     {
-      "label": "Українська · species",
+      "label": "Русский (RU) 2",
+      "lang": "ru",
+      "standing": "press",
+      "hl": "ru",
+      "gl": "RU",
+      "ceid": "RU:ru",
+      "query": "вспышка болезни диких животных"
+    },
+    {
+      "label": "Русский (KZ) 1",
+      "lang": "ru",
+      "standing": "press",
+      "hl": "ru",
+      "gl": "KZ",
+      "ceid": "KZ:ru",
+      "query": "инвазивный вид OR чужеродный вид распространение OR вырубка тайги дорога"
+    },
+    {
+      "label": "Русский (KZ) 2",
+      "lang": "ru",
+      "standing": "press",
+      "hl": "ru",
+      "gl": "KZ",
+      "ceid": "KZ:ru",
+      "query": "вспышка болезни диких животных"
+    },
+    {
+      "label": "Русский (BY) 1",
+      "lang": "ru",
+      "standing": "press",
+      "hl": "ru",
+      "gl": "BY",
+      "ceid": "BY:ru",
+      "query": "инвазивный вид OR чужеродный вид распространение OR вырубка тайги дорога"
+    },
+    {
+      "label": "Русский (BY) 2",
+      "lang": "ru",
+      "standing": "press",
+      "hl": "ru",
+      "gl": "BY",
+      "ceid": "BY:ru",
+      "query": "вспышка болезни диких животных"
+    },
+    {
+      "label": "Українська",
       "lang": "uk",
       "standing": "press",
       "hl": "uk",
@@ -310,16 +958,25 @@
       "query": "інвазивний вид OR чужорідний вид OR заповідник забудова"
     },
     {
-      "label": "Türkçe · species",
+      "label": "Türkçe 1",
       "lang": "tr",
       "standing": "press",
       "hl": "tr",
       "gl": "TR",
       "ceid": "TR:tr",
-      "query": "istilacı tür OR yabancı tür yayılım OR balon balığı OR korunan alan yol projesi"
+      "query": "istilacı tür OR yabancı tür yayılım OR balon balığı"
     },
     {
-      "label": "العربية · species",
+      "label": "Türkçe 2",
+      "lang": "tr",
+      "standing": "press",
+      "hl": "tr",
+      "gl": "TR",
+      "ceid": "TR:tr",
+      "query": "korunan alan yol projesi"
+    },
+    {
+      "label": "العربية (EG)",
       "lang": "ar",
       "standing": "press",
       "hl": "ar",
@@ -328,16 +985,43 @@
       "query": "\"الأنواع الغازية\" OR \"نوع دخيل\" انتشار OR محمية طبيعية مشروع طريق"
     },
     {
-      "label": "हिन्दी · species",
+      "label": "العربية (SA)",
+      "lang": "ar",
+      "standing": "press",
+      "hl": "ar",
+      "gl": "SA",
+      "ceid": "SA:ar",
+      "query": "\"الأنواع الغازية\" OR \"نوع دخيل\" انتشار OR محمية طبيعية مشروع طريق"
+    },
+    {
+      "label": "العربية (AE)",
+      "lang": "ar",
+      "standing": "press",
+      "hl": "ar",
+      "gl": "AE",
+      "ceid": "AE:ar",
+      "query": "\"الأنواع الغازية\" OR \"نوع دخيل\" انتشار OR محمية طبيعية مشروع طريق"
+    },
+    {
+      "label": "हिन्दी 1",
       "lang": "hi",
       "standing": "press",
       "hl": "hi",
       "gl": "IN",
       "ceid": "IN:hi",
-      "query": "\"आक्रामक प्रजाति\" OR विदेशी प्रजाति फैलाव OR वन भूमि परियोजना OR वन्यजीव गलियारा"
+      "query": "\"आक्रामक प्रजाति\" OR विदेशी प्रजाति फैलाव OR वन भूमि परियोजना"
     },
     {
-      "label": "বাংলা · species",
+      "label": "हिन्दी 2",
+      "lang": "hi",
+      "standing": "press",
+      "hl": "hi",
+      "gl": "IN",
+      "ceid": "IN:hi",
+      "query": "वन्यजीव गलियारा"
+    },
+    {
+      "label": "বাংলা (BD)",
       "lang": "bn",
       "standing": "press",
       "hl": "bn",
@@ -346,16 +1030,34 @@
       "query": "\"আক্রমণাত্মক প্রজাতি\" OR বিদেশি প্রজাতি বিস্তার OR সুন্দরবন প্রকল্প"
     },
     {
-      "label": "Bahasa Indonesia · species",
+      "label": "বাংলা (IN)",
+      "lang": "bn",
+      "standing": "press",
+      "hl": "bn",
+      "gl": "IN",
+      "ceid": "IN:bn",
+      "query": "\"আক্রমণাত্মক প্রজাতি\" OR বিদেশি প্রজাতি বিস্তার OR সুন্দরবন প্রকল্প"
+    },
+    {
+      "label": "Bahasa Indonesia 1",
       "lang": "id",
       "standing": "press",
       "hl": "id",
       "gl": "ID",
       "ceid": "ID:id",
-      "query": "\"spesies invasif\" OR spesies asing menyebar OR hutan primer jalan OR konsesi tambang hutan"
+      "query": "\"spesies invasif\" OR spesies asing menyebar OR hutan primer jalan"
     },
     {
-      "label": "Tiếng Việt · species",
+      "label": "Bahasa Indonesia 2",
+      "lang": "id",
+      "standing": "press",
+      "hl": "id",
+      "gl": "ID",
+      "ceid": "ID:id",
+      "query": "konsesi tambang hutan"
+    },
+    {
+      "label": "Tiếng Việt",
       "lang": "vi",
       "standing": "press",
       "hl": "vi",
@@ -364,7 +1066,7 @@
       "query": "\"loài ngoại lai xâm hại\" OR sinh vật ngoại lai OR rừng nguyên sinh đường"
     },
     {
-      "label": "ไทย · species",
+      "label": "ไทย",
       "lang": "th",
       "standing": "press",
       "hl": "th",
@@ -373,25 +1075,88 @@
       "query": "\"ชนิดพันธุ์ต่างถิ่นรุกราน\" OR ปลาหมอคางดำ OR ป่าดงดิบ ถนน โครงการ"
     },
     {
-      "label": "日本語 · species",
+      "label": "日本語 1",
       "lang": "ja",
       "standing": "press",
       "hl": "ja",
       "gl": "JP",
       "ceid": "JP:ja",
-      "query": "特定外来生物 OR 外来種 拡散 OR 原生林 開発 OR 野生動物 感染症 拡大"
+      "query": "特定外来生物 OR 外来種 拡散 OR 原生林 開発"
     },
     {
-      "label": "简体中文 · species",
+      "label": "日本語 2",
+      "lang": "ja",
+      "standing": "press",
+      "hl": "ja",
+      "gl": "JP",
+      "ceid": "JP:ja",
+      "query": "野生動物 感染症 拡大"
+    },
+    {
+      "label": "简体中文 (CN) 1",
       "lang": "zh",
       "standing": "press",
       "hl": "zh-CN",
       "gl": "CN",
       "ceid": "CN:zh-Hans",
-      "query": "入侵物种 OR 外来物种 扩散 OR 原始森林 公路 OR 野生动物 疫病"
+      "query": "入侵物种 OR 外来物种 扩散 OR 原始森林 公路"
     },
     {
-      "label": "繁體中文 · species",
+      "label": "简体中文 (CN) 2",
+      "lang": "zh",
+      "standing": "press",
+      "hl": "zh-CN",
+      "gl": "CN",
+      "ceid": "CN:zh-Hans",
+      "query": "野生动物 疫病"
+    },
+    {
+      "label": "简体中文 (TW) 1",
+      "lang": "zh",
+      "standing": "press",
+      "hl": "zh-TW",
+      "gl": "TW",
+      "ceid": "TW:zh-Hant",
+      "query": "入侵物种 OR 外来物种 扩散 OR 原始森林 公路"
+    },
+    {
+      "label": "简体中文 (TW) 2",
+      "lang": "zh",
+      "standing": "press",
+      "hl": "zh-TW",
+      "gl": "TW",
+      "ceid": "TW:zh-Hant",
+      "query": "野生动物 疫病"
+    },
+    {
+      "label": "简体中文 (HK) 1",
+      "lang": "zh",
+      "standing": "press",
+      "hl": "zh-HK",
+      "gl": "HK",
+      "ceid": "HK:zh-Hant",
+      "query": "入侵物种 OR 外来物种 扩散 OR 原始森林 公路"
+    },
+    {
+      "label": "简体中文 (HK) 2",
+      "lang": "zh",
+      "standing": "press",
+      "hl": "zh-HK",
+      "gl": "HK",
+      "ceid": "HK:zh-Hant",
+      "query": "野生动物 疫病"
+    },
+    {
+      "label": "繁體中文 (CN)",
+      "lang": "zh",
+      "standing": "press",
+      "hl": "zh-CN",
+      "gl": "CN",
+      "ceid": "CN:zh-Hans",
+      "query": "外來入侵種 OR 外來種 擴散 OR 原始林 開發"
+    },
+    {
+      "label": "繁體中文 (TW)",
       "lang": "zh",
       "standing": "press",
       "hl": "zh-TW",
@@ -400,142 +1165,430 @@
       "query": "外來入侵種 OR 外來種 擴散 OR 原始林 開發"
     },
     {
-      "label": "한국어 · species",
+      "label": "繁體中文 (HK)",
+      "lang": "zh",
+      "standing": "press",
+      "hl": "zh-HK",
+      "gl": "HK",
+      "ceid": "HK:zh-Hant",
+      "query": "外來入侵種 OR 外來種 擴散 OR 原始林 開發"
+    },
+    {
+      "label": "한국어 1",
       "lang": "ko",
       "standing": "press",
       "hl": "ko",
       "gl": "KR",
       "ceid": "KR:ko",
-      "query": "생태계교란종 OR 외래종 확산 OR 원시림 개발 OR 야생동물 질병 확산"
+      "query": "생태계교란종 OR 외래종 확산 OR 원시림 개발"
     },
     {
-      "label": "Kiswahili · species",
+      "label": "한국어 2",
+      "lang": "ko",
+      "standing": "press",
+      "hl": "ko",
+      "gl": "KR",
+      "ceid": "KR:ko",
+      "query": "야생동물 질병 확산"
+    },
+    {
+      "label": "Kiswahili (KE) 1",
       "lang": "sw",
       "standing": "press",
       "hl": "sw",
       "gl": "KE",
       "ceid": "KE:sw",
-      "query": "\"spishi vamizi\" OR mimea vamizi OR uvamizi wa misitu OR hifadhi ya taifa barabara"
+      "query": "\"spishi vamizi\" OR mimea vamizi OR uvamizi wa misitu"
     },
     {
-      "label": "English · incursion",
+      "label": "Kiswahili (KE) 2",
+      "lang": "sw",
+      "standing": "press",
+      "hl": "sw",
+      "gl": "KE",
+      "ceid": "KE:sw",
+      "query": "hifadhi ya taifa barabara"
+    },
+    {
+      "label": "Kiswahili (TZ) 1",
+      "lang": "sw",
+      "standing": "press",
+      "hl": "sw",
+      "gl": "TZ",
+      "ceid": "TZ:sw",
+      "query": "\"spishi vamizi\" OR mimea vamizi OR uvamizi wa misitu"
+    },
+    {
+      "label": "Kiswahili (TZ) 2",
+      "lang": "sw",
+      "standing": "press",
+      "hl": "sw",
+      "gl": "TZ",
+      "ceid": "TZ:sw",
+      "query": "hifadhi ya taifa barabara"
+    },
+    {
+      "label": "English (US) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-US",
       "gl": "US",
       "ceid": "US:en",
-      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area OR \"wildlife corridor\" highway OR encroachment reserve"
+      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area"
     },
     {
-      "label": "English (UK) · incursion",
+      "label": "English (US) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-US",
+      "gl": "US",
+      "ceid": "US:en",
+      "query": "\"wildlife corridor\" highway OR encroachment reserve"
+    },
+    {
+      "label": "English (GB) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-GB",
       "gl": "GB",
       "ceid": "GB:en",
-      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area OR \"wildlife corridor\" highway OR encroachment reserve"
+      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area"
     },
     {
-      "label": "English (India) · incursion",
+      "label": "English (GB) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-GB",
+      "gl": "GB",
+      "ceid": "GB:en",
+      "query": "\"wildlife corridor\" highway OR encroachment reserve"
+    },
+    {
+      "label": "English (IN) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-IN",
       "gl": "IN",
       "ceid": "IN:en",
-      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area OR \"wildlife corridor\" highway OR encroachment reserve"
+      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area"
     },
     {
-      "label": "English (Aus) · incursion",
+      "label": "English (IN) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-IN",
+      "gl": "IN",
+      "ceid": "IN:en",
+      "query": "\"wildlife corridor\" highway OR encroachment reserve"
+    },
+    {
+      "label": "English (Aus) (AU) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-AU",
       "gl": "AU",
       "ceid": "AU:en",
-      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area OR \"wildlife corridor\" highway OR encroachment reserve"
+      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area"
     },
     {
-      "label": "English (NZ) · incursion",
+      "label": "English (Aus) (AU) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-AU",
+      "gl": "AU",
+      "ceid": "AU:en",
+      "query": "\"wildlife corridor\" highway OR encroachment reserve"
+    },
+    {
+      "label": "English (NZ) (NZ) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-NZ",
       "gl": "NZ",
       "ceid": "NZ:en",
-      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area OR \"wildlife corridor\" highway OR encroachment reserve"
+      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area"
     },
     {
-      "label": "English (Kenya) · incursion",
+      "label": "English (NZ) (NZ) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-NZ",
+      "gl": "NZ",
+      "ceid": "NZ:en",
+      "query": "\"wildlife corridor\" highway OR encroachment reserve"
+    },
+    {
+      "label": "English (Kenya) (KE) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-KE",
       "gl": "KE",
       "ceid": "KE:en",
-      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area OR \"wildlife corridor\" highway OR encroachment reserve"
+      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area"
     },
     {
-      "label": "English (Nigeria) · incursion",
+      "label": "English (Kenya) (KE) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-KE",
+      "gl": "KE",
+      "ceid": "KE:en",
+      "query": "\"wildlife corridor\" highway OR encroachment reserve"
+    },
+    {
+      "label": "English (Nigeria) (NG) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-NG",
       "gl": "NG",
       "ceid": "NG:en",
-      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area OR \"wildlife corridor\" highway OR encroachment reserve"
+      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area"
     },
     {
-      "label": "English (S. Africa) · incursion",
+      "label": "English (Nigeria) (NG) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-NG",
+      "gl": "NG",
+      "ceid": "NG:en",
+      "query": "\"wildlife corridor\" highway OR encroachment reserve"
+    },
+    {
+      "label": "English (S. Africa) (ZA) 1",
       "lang": "en",
       "standing": "press",
       "hl": "en-ZA",
       "gl": "ZA",
       "ceid": "ZA:en",
-      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area OR \"wildlife corridor\" highway OR encroachment reserve"
+      "query": "\"intact forest\" road OR logging concession approved OR mining licence protected area"
     },
     {
-      "label": "Español · incursion",
+      "label": "English (S. Africa) (ZA) 2",
+      "lang": "en",
+      "standing": "press",
+      "hl": "en-ZA",
+      "gl": "ZA",
+      "ceid": "ZA:en",
+      "query": "\"wildlife corridor\" highway OR encroachment reserve"
+    },
+    {
+      "label": "Español (ES) 1",
       "lang": "es",
       "standing": "press",
       "hl": "es",
       "gl": "ES",
       "ceid": "ES:es",
-      "query": "carretera selva OR concesión minera área protegida OR tala bosque primario OR invasión territorio indígena minería"
+      "query": "carretera selva OR concesión minera área protegida OR tala bosque primario"
     },
     {
-      "label": "Español (MX) · incursion",
+      "label": "Español (ES) 2",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es",
+      "gl": "ES",
+      "ceid": "ES:es",
+      "query": "invasión territorio indígena minería"
+    },
+    {
+      "label": "Español (MX) 1",
       "lang": "es",
       "standing": "press",
       "hl": "es-419",
       "gl": "MX",
       "ceid": "MX:es-419",
-      "query": "carretera selva OR concesión minera área protegida OR tala bosque primario OR invasión territorio indígena minería"
+      "query": "carretera selva OR concesión minera área protegida OR tala bosque primario"
     },
     {
-      "label": "Português · incursion",
+      "label": "Español (MX) 2",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es-419",
+      "gl": "MX",
+      "ceid": "MX:es-419",
+      "query": "invasión territorio indígena minería"
+    },
+    {
+      "label": "Español (AR) 1",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es-419",
+      "gl": "AR",
+      "ceid": "AR:es-419",
+      "query": "carretera selva OR concesión minera área protegida OR tala bosque primario"
+    },
+    {
+      "label": "Español (AR) 2",
+      "lang": "es",
+      "standing": "press",
+      "hl": "es-419",
+      "gl": "AR",
+      "ceid": "AR:es-419",
+      "query": "invasión territorio indígena minería"
+    },
+    {
+      "label": "Português (BR) 1",
       "lang": "pt",
       "standing": "press",
       "hl": "pt-BR",
       "gl": "BR",
       "ceid": "BR:pt-419",
-      "query": "rodovia floresta OR garimpo terra indígena OR concessão madeireira OR desmatamento área protegida"
+      "query": "rodovia floresta OR garimpo terra indígena OR concessão madeireira"
     },
     {
-      "label": "Français · incursion",
+      "label": "Português (BR) 2",
+      "lang": "pt",
+      "standing": "press",
+      "hl": "pt-BR",
+      "gl": "BR",
+      "ceid": "BR:pt-419",
+      "query": "desmatamento área protegida"
+    },
+    {
+      "label": "Português (PT) 1",
+      "lang": "pt",
+      "standing": "press",
+      "hl": "pt-BR",
+      "gl": "PT",
+      "ceid": "PT:pt-150",
+      "query": "rodovia floresta OR garimpo terra indígena OR concessão madeireira"
+    },
+    {
+      "label": "Português (PT) 2",
+      "lang": "pt",
+      "standing": "press",
+      "hl": "pt-BR",
+      "gl": "PT",
+      "ceid": "PT:pt-150",
+      "query": "desmatamento área protegida"
+    },
+    {
+      "label": "Português (AO) 1",
+      "lang": "pt",
+      "standing": "press",
+      "hl": "pt-BR",
+      "gl": "AO",
+      "ceid": "AO:pt-150",
+      "query": "rodovia floresta OR garimpo terra indígena OR concessão madeireira"
+    },
+    {
+      "label": "Português (AO) 2",
+      "lang": "pt",
+      "standing": "press",
+      "hl": "pt-BR",
+      "gl": "AO",
+      "ceid": "AO:pt-150",
+      "query": "desmatamento área protegida"
+    },
+    {
+      "label": "Français (FR) 1",
       "lang": "fr",
       "standing": "press",
       "hl": "fr",
       "gl": "FR",
       "ceid": "FR:fr",
-      "query": "route forêt primaire OR concession minière aire protégée OR orpaillage forêt OR déforestation parc national"
+      "query": "route forêt primaire OR concession minière aire protégée OR orpaillage forêt"
     },
     {
-      "label": "Deutsch · incursion",
+      "label": "Français (FR) 2",
+      "lang": "fr",
+      "standing": "press",
+      "hl": "fr",
+      "gl": "FR",
+      "ceid": "FR:fr",
+      "query": "déforestation parc national"
+    },
+    {
+      "label": "Français (BE) 1",
+      "lang": "fr",
+      "standing": "press",
+      "hl": "fr",
+      "gl": "BE",
+      "ceid": "BE:fr",
+      "query": "route forêt primaire OR concession minière aire protégée OR orpaillage forêt"
+    },
+    {
+      "label": "Français (BE) 2",
+      "lang": "fr",
+      "standing": "press",
+      "hl": "fr",
+      "gl": "BE",
+      "ceid": "BE:fr",
+      "query": "déforestation parc national"
+    },
+    {
+      "label": "Français (CA) 1",
+      "lang": "fr",
+      "standing": "press",
+      "hl": "fr",
+      "gl": "CA",
+      "ceid": "CA:fr",
+      "query": "route forêt primaire OR concession minière aire protégée OR orpaillage forêt"
+    },
+    {
+      "label": "Français (CA) 2",
+      "lang": "fr",
+      "standing": "press",
+      "hl": "fr",
+      "gl": "CA",
+      "ceid": "CA:fr",
+      "query": "déforestation parc national"
+    },
+    {
+      "label": "Deutsch (DE) 1",
       "lang": "de",
       "standing": "press",
       "hl": "de",
       "gl": "DE",
       "ceid": "DE:de",
-      "query": "Straße Urwald OR Bergbau Schutzgebiet OR Rodung Nationalpark OR Konzession Regenwald"
+      "query": "Straße Urwald OR Bergbau Schutzgebiet OR Rodung Nationalpark"
     },
     {
-      "label": "Italiano · incursion",
+      "label": "Deutsch (DE) 2",
+      "lang": "de",
+      "standing": "press",
+      "hl": "de",
+      "gl": "DE",
+      "ceid": "DE:de",
+      "query": "Konzession Regenwald"
+    },
+    {
+      "label": "Deutsch (AT) 1",
+      "lang": "de",
+      "standing": "press",
+      "hl": "de",
+      "gl": "AT",
+      "ceid": "AT:de",
+      "query": "Straße Urwald OR Bergbau Schutzgebiet OR Rodung Nationalpark"
+    },
+    {
+      "label": "Deutsch (AT) 2",
+      "lang": "de",
+      "standing": "press",
+      "hl": "de",
+      "gl": "AT",
+      "ceid": "AT:de",
+      "query": "Konzession Regenwald"
+    },
+    {
+      "label": "Deutsch (CH) 1",
+      "lang": "de",
+      "standing": "press",
+      "hl": "de",
+      "gl": "CH",
+      "ceid": "CH:de",
+      "query": "Straße Urwald OR Bergbau Schutzgebiet OR Rodung Nationalpark"
+    },
+    {
+      "label": "Deutsch (CH) 2",
+      "lang": "de",
+      "standing": "press",
+      "hl": "de",
+      "gl": "CH",
+      "ceid": "CH:de",
+      "query": "Konzession Regenwald"
+    },
+    {
+      "label": "Italiano (IT)",
       "lang": "it",
       "standing": "press",
       "hl": "it",
@@ -544,7 +1597,16 @@
       "query": "strada foresta OR concessione mineraria area protetta OR disboscamento parco"
     },
     {
-      "label": "Nederlands · incursion",
+      "label": "Italiano (CH)",
+      "lang": "it",
+      "standing": "press",
+      "hl": "it",
+      "gl": "CH",
+      "ceid": "CH:it",
+      "query": "strada foresta OR concessione mineraria area protetta OR disboscamento parco"
+    },
+    {
+      "label": "Nederlands (NL)",
       "lang": "nl",
       "standing": "press",
       "hl": "nl",
@@ -553,7 +1615,16 @@
       "query": "weg regenwoud OR mijnbouw natuurgebied OR ontbossing beschermd gebied"
     },
     {
-      "label": "Svenska · incursion",
+      "label": "Nederlands (BE)",
+      "lang": "nl",
+      "standing": "press",
+      "hl": "nl",
+      "gl": "BE",
+      "ceid": "BE:nl",
+      "query": "weg regenwoud OR mijnbouw natuurgebied OR ontbossing beschermd gebied"
+    },
+    {
+      "label": "Svenska",
       "lang": "sv",
       "standing": "press",
       "hl": "sv",
@@ -562,7 +1633,7 @@
       "query": "väg urskog OR gruvdrift naturreservat OR avverkning nationalpark"
     },
     {
-      "label": "Ελληνικά · incursion",
+      "label": "Ελληνικά",
       "lang": "el",
       "standing": "press",
       "hl": "el",
@@ -571,7 +1642,7 @@
       "query": "δρόμος δάσος OR εξόρυξη προστατευόμενη περιοχή OR υλοτομία πάρκο"
     },
     {
-      "label": "Polski · incursion",
+      "label": "Polski",
       "lang": "pl",
       "standing": "press",
       "hl": "pl",
@@ -580,7 +1651,7 @@
       "query": "droga puszcza OR kopalnia obszar chroniony OR wycinka park narodowy"
     },
     {
-      "label": "Русский · incursion",
+      "label": "Русский (RU)",
       "lang": "ru",
       "standing": "press",
       "hl": "ru",
@@ -589,7 +1660,25 @@
       "query": "дорога тайга вырубка OR добыча заповедник OR рубка национальный парк"
     },
     {
-      "label": "Українська · incursion",
+      "label": "Русский (KZ)",
+      "lang": "ru",
+      "standing": "press",
+      "hl": "ru",
+      "gl": "KZ",
+      "ceid": "KZ:ru",
+      "query": "дорога тайга вырубка OR добыча заповедник OR рубка национальный парк"
+    },
+    {
+      "label": "Русский (BY)",
+      "lang": "ru",
+      "standing": "press",
+      "hl": "ru",
+      "gl": "BY",
+      "ceid": "BY:ru",
+      "query": "дорога тайга вырубка OR добыча заповедник OR рубка национальный парк"
+    },
+    {
+      "label": "Українська",
       "lang": "uk",
       "standing": "press",
       "hl": "uk",
@@ -598,7 +1687,7 @@
       "query": "дорога заповідник OR видобуток національний парк OR вирубка лісу"
     },
     {
-      "label": "Türkçe · incursion",
+      "label": "Türkçe",
       "lang": "tr",
       "standing": "press",
       "hl": "tr",
@@ -607,7 +1696,7 @@
       "query": "yol orman proje OR maden ruhsatı korunan alan OR ağaç kesimi milli park"
     },
     {
-      "label": "العربية · incursion",
+      "label": "العربية (EG)",
       "lang": "ar",
       "standing": "press",
       "hl": "ar",
@@ -616,7 +1705,25 @@
       "query": "طريق غابة مشروع OR تعدين محمية طبيعية OR قطع أشجار حديقة وطنية"
     },
     {
-      "label": "हिन्दी · incursion",
+      "label": "العربية (SA)",
+      "lang": "ar",
+      "standing": "press",
+      "hl": "ar",
+      "gl": "SA",
+      "ceid": "SA:ar",
+      "query": "طريق غابة مشروع OR تعدين محمية طبيعية OR قطع أشجار حديقة وطنية"
+    },
+    {
+      "label": "العربية (AE)",
+      "lang": "ar",
+      "standing": "press",
+      "hl": "ar",
+      "gl": "AE",
+      "ceid": "AE:ar",
+      "query": "طريق غابة مشروع OR تعدين محمية طبيعية OR قطع أشجار حديقة وطنية"
+    },
+    {
+      "label": "हिन्दी",
       "lang": "hi",
       "standing": "press",
       "hl": "hi",
@@ -625,7 +1732,7 @@
       "query": "सड़क वन परियोजना OR खनन अभयारण्य OR वन भूमि हस्तांतरण"
     },
     {
-      "label": "বাংলা · incursion",
+      "label": "বাংলা (BD)",
       "lang": "bn",
       "standing": "press",
       "hl": "bn",
@@ -634,7 +1741,16 @@
       "query": "সড়ক বন প্রকল্প OR খনন অভয়ারণ্য OR বন উজাড়"
     },
     {
-      "label": "Bahasa Indonesia · incursion",
+      "label": "বাংলা (IN)",
+      "lang": "bn",
+      "standing": "press",
+      "hl": "bn",
+      "gl": "IN",
+      "ceid": "IN:bn",
+      "query": "সড়ক বন প্রকল্প OR খনন অভয়ারণ্য OR বন উজাড়"
+    },
+    {
+      "label": "Bahasa Indonesia",
       "lang": "id",
       "standing": "press",
       "hl": "id",
@@ -643,7 +1759,7 @@
       "query": "jalan hutan primer OR konsesi tambang kawasan lindung OR pembukaan lahan hutan"
     },
     {
-      "label": "Tiếng Việt · incursion",
+      "label": "Tiếng Việt",
       "lang": "vi",
       "standing": "press",
       "hl": "vi",
@@ -652,7 +1768,7 @@
       "query": "đường rừng nguyên sinh OR khai thác mỏ khu bảo tồn OR phá rừng"
     },
     {
-      "label": "ไทย · incursion",
+      "label": "ไทย",
       "lang": "th",
       "standing": "press",
       "hl": "th",
@@ -661,7 +1777,7 @@
       "query": "ถนน ป่า โครงการ OR เหมือง เขตอนุรักษ์ OR ตัดไม้ อุทยาน"
     },
     {
-      "label": "日本語 · incursion",
+      "label": "日本語",
       "lang": "ja",
       "standing": "press",
       "hl": "ja",
@@ -670,7 +1786,7 @@
       "query": "原生林 道路 OR 鉱山 保護区 OR 森林伐採 国立公園"
     },
     {
-      "label": "简体中文 · incursion",
+      "label": "简体中文 (CN)",
       "lang": "zh",
       "standing": "press",
       "hl": "zh-CN",
@@ -679,7 +1795,7 @@
       "query": "原始森林 公路 OR 采矿 保护区 OR 砍伐 国家公园"
     },
     {
-      "label": "繁體中文 · incursion",
+      "label": "简体中文 (TW)",
       "lang": "zh",
       "standing": "press",
       "hl": "zh-TW",
@@ -688,7 +1804,16 @@
       "query": "原始森林 公路 OR 采矿 保护区 OR 砍伐 国家公园"
     },
     {
-      "label": "한국어 · incursion",
+      "label": "简体中文 (HK)",
+      "lang": "zh",
+      "standing": "press",
+      "hl": "zh-HK",
+      "gl": "HK",
+      "ceid": "HK:zh-Hant",
+      "query": "原始森林 公路 OR 采矿 保护区 OR 砍伐 国家公园"
+    },
+    {
+      "label": "한국어",
       "lang": "ko",
       "standing": "press",
       "hl": "ko",
@@ -697,12 +1822,21 @@
       "query": "원시림 도로 OR 광산 보호구역 OR 산림 훼손 국립공원"
     },
     {
-      "label": "Kiswahili · incursion",
+      "label": "Kiswahili (KE)",
       "lang": "sw",
       "standing": "press",
       "hl": "sw",
       "gl": "KE",
       "ceid": "KE:sw",
+      "query": "barabara msitu OR uchimbaji hifadhi OR ukataji miti hifadhi ya taifa"
+    },
+    {
+      "label": "Kiswahili (TZ)",
+      "lang": "sw",
+      "standing": "press",
+      "hl": "sw",
+      "gl": "TZ",
+      "ceid": "TZ:sw",
       "query": "barabara msitu OR uchimbaji hifadhi OR ukataji miti hifadhi ya taifa"
     }
   ],
