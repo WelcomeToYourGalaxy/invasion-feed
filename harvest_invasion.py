@@ -45,6 +45,20 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 
+# The shared gazetteer. Placement used to be each wire's own short country
+# table, which put most of every wire in a counter marked "unplaced"; this is
+# the fleet's common one, and it is optional at import so a harvest still runs
+# if the data file has not been fetched yet.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    import galaxy_places
+    _GAZETTEER = True
+except Exception as _exc:                       # noqa: BLE001
+    print("  ! gazetteer unavailable (%s); falling back to the local table"
+          % _exc, file=sys.stderr)
+    galaxy_places = None
+    _GAZETTEER = False
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 SOURCES_PATH = os.path.join(HERE, "sources_invasion.json")
 OUT_PATH = os.path.join(HERE, "wire_invasion.json")
@@ -76,9 +90,24 @@ def build_gnews_url(loc):
     return ("https://news.google.com/rss/search?q=" + urllib.parse.quote(q) +
             "&hl=" + loc["hl"] + "&gl=" + loc["gl"] + "&ceid=" + loc["ceid"])
 
+READ_BUDGET_MIN = 35          # minutes spent reading wires
+
+# The wall-clock budget for reading wires. Past it the remaining sources are
+# recorded unreachable and the harvest finishes on what it has, because the
+# wire is only written at the end of run() and a job killed by the workflow
+# timeout commits nothing at all — which is how a feed gets stuck stale.
+DEADLINE = None
+
+
+def out_of_time():
+    return DEADLINE is not None and time.monotonic() > DEADLINE
+
+
 def fetch(url, tries=3):
     last = None
     for attempt in range(tries):
+        if out_of_time():
+            return None
         try:
             req = urllib.request.Request(url, headers={
                 "User-Agent": USER_AGENT,
@@ -91,6 +120,16 @@ def fetch(url, tries=3):
                 if resp.headers.get("Content-Encoding") == "gzip":
                     raw = gzip.GzipFile(fileobj=io.BytesIO(raw)).read()
                 return raw
+        except urllib.error.HTTPError as exc:
+            last = exc
+            # Being rate-limited or refused is an answer, not a hiccup. Trying
+            # the same query twice more against the same limiter spends eighty
+            # seconds of a worker slot to be told the same thing, and deepens
+            # the throttle for every other query in the run.
+            if exc.code in (403, 429, 451):
+                time.sleep(1.5)
+                break
+            time.sleep(1.5 * (attempt + 1))
         except Exception as exc:                       # noqa: BLE001 — report, don't crash the run
             last = exc
             time.sleep(1.5 * (attempt + 1))
@@ -549,6 +588,66 @@ TOPICS = [
         ("thermal tolerance", ["range", "shift", "expansion"]),
         ("new arrivals", ["warming", "waters", "species"]),
     ]),
+    ("pesticides", "Sprayed over the surface of it", [
+        ("property damage", ["invasive", "plant", "species"]),
+        ("algae boom", None), ("algal bloom", ["ocean", "world", "global"]),
+        ("cost of losing", None), ("calculated the costs", None),
+        # The section's longest single passage: 64 per cent of agricultural land
+        # exposed to mixtures past safe ecological thresholds, 31 per cent at
+        # high risk, ~80 per cent of what is sprayed degrading outward through
+        # wind, groundwater and soil, and the industry responsible for 85 per
+        # cent of it. None of this had a subject on the wire.
+        ("pesticide*", ["spray*", "exposure", "drift", "residue", "pollution", "risk",
+                        "threshold", "banned", "approval", "leach*", "runoff"]),
+        ("herbicide*", ["spray*", "drift", "residue", "banned", "resistance"]),
+        ("insecticide*", []), ("neonicotinoid*", []), ("glyphosate", []),
+        ("agrochemical*", []), ("aerial spraying", []), ("crop dusting", []),
+        ("bioaccumulat*", []), ("soil toxicity", []), ("groundwater leaching", []),
+        ("spray*", ["national park", "protected", "reserve", "conservation area"]),
+        ("basf", ["pesticide", "herbicide", "agrochemical"]),
+        ("bayer", ["pesticide", "herbicide", "glyphosate", "agrochemical"]),
+        ("syngenta", []), ("sumitomo chemical", []), ("nufarm", []), ("adama", []),
+        ("plaguicida*", []), ("pesticida*", []), ("agrotóxico*", []),
+        ("pesticide", ["épandage", "dérive", "résidu"]), ("pestizid*", []),
+        ("пестицид", []), ("农药", []), ("農薬", []), ("농약", []),
+        ("مبيدات", []), ("कीटनाशक", []), ("pestisida", []),
+    ]),
+    ("protected", "What protection is worth", [
+        # Also absent, and also a long passage: how much of the Earth is
+        # protected, in which IUCN category, and how readily that protection is
+        # removed again — 2,173 downgrades, 604 downsizings, 328 degazettements
+        # between 1895 and 2021, 62 per cent of them tied to extraction.
+        ("protected area*", ["downgrad*", "downsiz*", "degazett*", "removed", "revoked",
+                             "shrunk", "opened", "boundary", "reduced", "status"]),
+        ("national park", ["mining", "drilling", "logging", "concession", "boundary",
+                           "downgrad*", "opened", "reduced", "revoked"]),
+        ("nature reserve", ["mining", "logging", "concession", "downgrad*", "revoked", "reduced"]),
+        ("paddd", []), ("degazett*", []), ("downgrad*", ["protected", "park", "reserve"]),
+        ("conservation area", ["mining", "concession", "downgrad*", "revoked"]),
+        ("iucn categor*", []), ("marine protected area", []), ("30x30", []),
+        ("world heritage", ["mining", "logging", "drilling", "danger", "delisted"]),
+        ("concession", ["protected", "park", "reserve", "indigenous", "forest"]),
+        ("área protegida", []), ("aire protégée", []), ("schutzgebiet", []),
+        ("охраняемая территория", []), ("保护区", []), ("保護区", []),
+        ("منطقة محمية", []), ("kawasan konservasi", []),
+    ]),
+    ("intactness", "What is left untouched", [
+        # The section opens on this: land ecosystems down to ~3 per cent
+        # untouched, no area of the ocean now unaffected, 40 per cent heavily
+        # impacted.
+        ("wilderness", ["lost", "remaining", "shrunk", "declin*", "last", "intact"]),
+        ("intact forest", []), ("intact ecosystem*", []),
+        ("intact", ["ecosystem*", "land", "remain*", "per cent", "forest", "habitat", "%"]),
+        ("untouched", ["last", "remaining", "no longer", "per cent", "%", "ecosystem*"]),
+        ("unaffected", ["ocean", "sea", "no area", "seabed"]),
+        ("heavily impacted", []), ("largely undisturbed", []),
+        ("roadless", []), ("human footprint", []), ("land-use change", []),
+        ("ecosystem conversion", []), ("habitat conversion", []), ("habitat loss", []),
+        ("frontier forest", []), ("primary forest", ["lost", "cleared", "declin*"]),
+        ("seafloor", ["trawl*", "damage", "impact*"]), ("ocean floor", ["trawl*", "damage"]),
+        ("último*", ["bosque intacto", "selva"]), ("forêt primaire", []),
+        ("urwald", []), ("нетронут", []), ("原始林", []), ("原生林", []),
+    ]),
     ("impact", "Cost & consequence", [
         ("economic cost", ["invasive", "pest", "species"]), ("crop losses", ["pest", "invasive"]),
         ("fisheries collapse", None), ("food security", ["pest", "invasive", "disease"]),
@@ -655,7 +754,16 @@ BLOCK = [
 # travels — a spread across a region, a number, a mechanism, a consequence for
 # people or for a system. Below KEEP_SCALE a story never enters the feed.
 # --------------------------------------------------------------------------
-KEEP_SCALE = 2
+# The scale gate. This wire had inherited KEEP_SCALE = 2 from the environment
+# wire, where the brief is big-picture findings only — no article on how the
+# water bugs are doing in Angola. That is not this wire's brief. This one is
+# invasion of the non-human world in as many regions as possible, in both
+# directions, and most of that subject is specific by nature: a spray programme,
+# a protected area downgraded, a species established on one island. The
+# inherited gate was discarding 320 of the 333 stories that passed relevance —
+# 96 per cent of the wire's own subject. Scale is still scored, and still counts
+# towards how a story ranks, but it no longer decides whether the story exists.
+KEEP_SCALE = 0
 
 SCOPE_GLOBAL = [
     "global*", "worldwide", "world's", "planet*", "earth's", "across the world",
@@ -745,6 +853,55 @@ PROJECTED = [
 
 INVASION_C = _compile_all(INVASION)
 INCURSION_C = _compile_all(INCURSION)
+# Wild places as the wire's own non-English sources name them. WILD above is
+# most of the way there in English and patchy everywhere else: it carries
+# "floresta intacta" but not "floresta", "selva" but not "bosque", so a
+# Portuguese story about the Amazon rainforest failed the wilderness test and a
+# Spanish one about illegal mining in the jungle failed with it. Sixty-one
+# per cent of this wire's sources are non-English.
+#
+# Terms are translations of the English list above, not new subject matter.
+# Short homographs are left out on purpose: Polish "las" would fire on every
+# Spanish article, Portuguese "mata" is also a Spanish verb, and bare Thai and
+# Devanagari syllables match inside unrelated words because those scripts are
+# matched as substrings.
+WILD += [
+    # Spanish, Portuguese, French, Italian
+    "bosque*", "selva*", "humedal*", "manglar*", "arrecife*", "biodiversidad",
+    "área protegida", "area protegida", "parque nacional", "fauna silvestre",
+    "floresta*", "mata atlântica", "manguezal", "biodiversidade",
+    "terra indígena", "pantanal", "forêt*", "jungle*", "zone humide",
+    "mangrove*", "récif", "biodiversité", "aire protégée", "parc national",
+    "faune sauvage", "foresta", "giungla", "zona umida", "biodiversità",
+    "area protetta", "parco nazionale",
+    # German, Dutch, Nordic, Polish, Turkish, Greek
+    "wald", "urwald", "regenwald", "feuchtgebiet*", "artenvielfalt",
+    "schutzgebiet*", "nationalpark", "wildtier*", "oerwoud", "regenwoud",
+    "natuurgebied", "biodiversiteit", "skog*", "våtmark*", "naturreservat",
+    "puszcz*", "mokradł*", "bioróżnorodność", "park narodowy", "orman*",
+    "sulak alan", "biyoçeşitlilik", "milli park", "δάσος", "δάση",
+    "υγρότοπ", "βιοποικιλότητα", "εθνικό πάρκο",
+    # Cyrillic
+    "лес", "леса", "лесов", "лесн", "тайга", "биоразнообразие",
+    "национальный парк", "дикая природа", "ліс", "лісів", "заповідник",
+    "біорізноманіття",
+    # Arabic, Persian, Hebrew, Amharic
+    "الغابات", "الأراضي الرطبة", "التنوع البيولوجي", "محمية طبيعية",
+    "جنگل", "تنوع زیستی", "יער", "שמורת טבע", "ደን",
+    # South and Southeast Asia
+    "वन्यजीव", "जैव विविधता", "राष्ट्रीय उद्यान", "বনভূমি", "জীববৈচিত্র্য",
+    "hutan", "lahan basah", "keanekaragaman hayati", "taman nasional",
+    "rừng", "đất ngập nước", "đa dạng sinh học", "vườn quốc gia",
+    "ป่าไม้", "ผืนป่า", "พื้นที่ชุ่มน้ำ", "ความหลากหลายทางชีวภาพ",
+    # CJK
+    "森林", "雨林", "熱帯雨林", "热带雨林", "湿地", "濕地", "紅樹林",
+    "红树林", "珊瑚礁", "生物多样性", "生物多樣性", "国家公园", "國家公園",
+    "野生动物", "野生動物", "国立公園", "野生生物", "산림", "열대우림",
+    "습지", "생물다양성", "국립공원", "야생동물",
+    # Swahili, Hausa
+    "gandun daji", "hifadhi ya taifa", "bioanuwai",
+]
+
 WILD_C = _compile_all(WILD)
 BLOCK_C = _compile_all(BLOCK)
 DOCUMENTED_C = _compile_all(DOCUMENTED)
@@ -756,6 +913,23 @@ REGION_C = _compile_all(SCOPE_REGION)
 SYSTEMIC_C = _compile_all(SYSTEMIC)
 CONSEQUENCE_C = _compile_all(CONSEQUENCE)
 FINDING_C = _compile_all(FINDING)
+
+# --------------------------------------------------------------------------
+# The same subjects in the languages this wire's own queries ask in, derived
+# from those queries and filed under the subject each query's label names. The
+# gate above was written in English; the queries were translated and it was
+# not, so three quarters of what the wire fetched could not be recognised once
+# it arrived. Generated — edit topics_multilingual.json, or delete the file to
+# turn this off.
+# --------------------------------------------------------------------------
+_EXTRA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           "topics_multilingual.json")
+if os.path.exists(_EXTRA_PATH):
+    with open(_EXTRA_PATH, encoding="utf-8") as _fh:
+        _EXTRA = json.load(_fh)
+    TOPICS = [(tid, label, terms + [(t, g) for t, g in _EXTRA.get(tid, [])])
+              for tid, label, terms in TOPICS]
+
 TOPICS_C = [(tid, label, [(_compile(t), _compile_all(g) if g else None) for t, g in terms])
             for tid, label, terms in TOPICS]
 GEO3_C = [(rid, rlabel, [(sid, slabel, [(pid, plabel, _compile_all(terms))
@@ -766,12 +940,32 @@ GEO3_C = [(rid, rlabel, [(sid, slabel, [(pid, plabel, _compile_all(terms))
 
 def relevant(text):
     """Species arriving where they did not evolve, or machinery arriving where
-    it has not been. A road alone is not this feed; a road into a forest is."""
+    it has not been. A road alone is not this feed; a road into a forest is.
+
+    The last clause used to be the whole of the second half, and it and the
+    subject table were two different definitions of the same thing. A story had
+    to satisfy both — this test to be fetched at all, and then a subject to
+    survive, because the harvest refuses anything no subject will claim. They
+    disagreed in both directions, and in the second one they lost stories that
+    are plainly this feed's subject matter: mercury poisoning Amazon
+    communities, mining opposed in Ecuador's Amazon, an industrial land release
+    over four hundred endangered species, diggers tearing up a wildlife haven.
+    Every one of them was claimed by one of this wire's own thirteen subjects
+    and dropped here for naming no road, pipeline or concession.
+
+    So a subject claim now counts as an incursion — but only beside something
+    wild, which is the same condition the clause above already imposes and the
+    reason the feed is not a land-rights wire. Dropping that condition as well
+    was tried and let metaphor straight in: a corporate bid described as an "AI
+    land grab" is claimed by a subject, and without the wilderness test it
+    arrives."""
     if hit(text, BLOCK_C):
         return False
     if hit(text, INVASION_C):
         return True
-    return hit(text, INCURSION_C) and hit(text, WILD_C)
+    if hit(text, INCURSION_C) and hit(text, WILD_C):
+        return True
+    return bool(topics_for(text)) and hit(text, WILD_C)
 
 
 def kind_of(text):
@@ -1170,19 +1364,91 @@ def scene_first(text, places):
         (scene if _is_scene(text, _first_pos(text, terms.get(pid, []))) else rest).append(pid)
     return scene + rest
 
-def point_for(text, places, subs, regions):
-    """The most specific point a story resolved to: a named sub-national place
-    if there is one, otherwise the country, otherwise the subregion or region.
-    Returns (label_or_None, point_or_None)."""
+
+# --------------------------------------------------------------------------
+# The gazetteer answers with a country; this wire's taxonomy is keyed on ids
+# whose leading token is that country's ISO-2. Filing a placed story under its
+# region is therefore a lookup, not a guess. Where a country is split across
+# several places, only region and subregion are filled: which of the places a
+# story belongs to is a question the country code cannot answer.
+# --------------------------------------------------------------------------
+ISO_REGION = {}
+for _rid, _rlabel, _subs in GEO3:
+    for _sid, _slabel, _places in _subs:
+        for _pid, _plabel, _terms in _places:
+            _iso = _pid.split("-")[0].lower()
+            if len(_iso) == 2:
+                ISO_REGION.setdefault(_iso, (_rid, _sid))
+
+
+def file_by_country(row, cc):
+    """Put a gazetteer-placed story in its region, if the wire has one."""
+    if not cc:
+        return
+    hit = ISO_REGION.get(str(cc).lower())
+    if not hit:
+        return
+    rid, sid = hit
+    if not row.get("w") or row["w"] == ["unlocated"]:
+        row["w"] = [rid]
+    if not row.get("sr") or row["sr"] == ["unlocated"]:
+        row["sr"] = [sid]
+
+
+
+def country_for(raw, locale=None):
+    """The ISO-2 the placement resolved to, or None."""
+    if not _GAZETTEER:
+        return None
+    try:
+        return galaxy_places.resolve_full(raw, locale)[4]
+    except Exception:
+        return None
+
+
+def point_for(text, places, subs, regions, locale=None, raw=None):
+    """The most specific point a story resolved to.
+
+    The order is deliberate. This wire's own curated table goes first: it holds
+    the places this subject actually turns up and the country list it was
+    written against, and it beats a general gazetteer on its own ground. The
+    shared gazetteer follows but only overrides at the settlement level, so a
+    headline naming Kharkiv pins on Kharkiv rather than the middle of Ukraine,
+    while a country reading from this wire's own table still wins over a
+    country reading from the gazetteer. Then the bodies that stand for a
+    jurisdiction without naming it — EFSA is a European story, ANVISA a
+    Brazilian one. Last, and weakest, the country the source itself reports
+    from.
+
+    Returns (label_or_None, point_or_None, approx). approx is True only for
+    that last case, where nothing in the story placed it and the point is the
+    reporting locale rather than the scene. The page draws those hollow.
+    """
     label, point = precise_for(text)
     if point:
-        return label, point
+        return label, point, False
+
+    glabel, gpoint, grank = None, None, -1
+    if _GAZETTEER:
+        glabel, gpoint, grank, _approx = galaxy_places.resolve_ranked(raw or text)
+        if grank == 3:
+            return glabel, gpoint, False
+
     places = scene_first(text, places)
     for level in (places, subs, regions):
         for pid in level:
             if pid in COORDS:
-                return None, COORDS[pid]
-    return None, None
+                return None, COORDS[pid], False
+
+    if gpoint:
+        return glabel, gpoint, False
+
+    if _GAZETTEER and locale:
+        llabel, lpoint, _lrank, lapprox = galaxy_places.resolve_ranked("", locale)
+        if lpoint:
+            return llabel, lpoint, lapprox
+
+    return None, None, False
 
 
 def load_sources():
@@ -1196,12 +1462,15 @@ def load_sources():
         for loc in cfg.get(block, []):
             srcs.append({"name": prefix + loc["label"], "lang": loc["lang"],
                          "standing": loc["standing"], "region": loc["standing"],
-                         "kind": "news", "url": build_gnews_url(loc)})
+                         "kind": "news", "url": build_gnews_url(loc), "gl": loc.get("gl")})
     return srcs, cfg
 
 
 def run(dry_run=False, fixtures=None):
+    global DEADLINE
     sources, cfg = load_sources()
+    if not fixtures:
+        DEADLINE = time.monotonic() + READ_BUDGET_MIN * 60
     print("Reading %d wires…" % len(sources))
 
     def read(src):
@@ -1260,11 +1529,22 @@ def run(dry_run=False, fixtures=None):
                     continue
                 regions, subs, places = places_for(text)
                 total, reasons = pressure(text, src["standing"], regions != ["unlocated"])
-                row["x"] = topics_for(text) or ["invasive"]
+                # No silent default, as on the rest of the fleet.
+                subjects = topics_for(text)
+                if not subjects:
+                    stat["refused"] += 1
+                    refused += 1
+                    continue
+                row["x"] = subjects
                 row["w"] = regions
                 row["sr"] = subs
                 row["pl"] = places
-                row["pn"], row["ll"] = point_for(text, places, subs, regions)
+                row["gl"] = src.get("gl")
+                _raw = (row["t"] or "") + " " + (row.get("s") or "")
+                row["pn"], row["ll"], row["pa"] = point_for(
+                    text, places, subs, regions, src.get("gl"), _raw)
+                if row["ll"]:
+                    file_by_country(row, country_for(_raw, src.get("gl")))
                 row["p"] = total
                 row["y"] = reasons + reach_why
                 row["st"] = src["standing"]
@@ -1279,8 +1559,23 @@ def run(dry_run=False, fixtures=None):
 
     fresh_urls = {canon_url(i["u"]) for i in items}
     for row in previous:
-        if "x" in row:
-            absorb(row)
+        if "x" not in row:
+            continue
+        # A retained story is placed again rather than carried forward with the
+        # answer it happened to get the day it was first read. RETAIN_DAYS is
+        # 45, so without this a change to the placement layer takes a month and
+        # a half to reach the map, and a story never re-fetched keeps its first
+        # answer for good. Rows already holding a point resolved from their own
+        # text are left alone; only the unplaced and the source-country
+        # approximations are reconsidered.
+        if not row.get("ll") or row.get("pa"):
+            _raw = ((row.get("t") or "") + " " + (row.get("s") or ""))
+            row["pn"], row["ll"], row["pa"] = point_for(
+                _raw.lower(), row.get("pl") or [], row.get("sr") or [],
+                row.get("w") or [], row.get("gl"), _raw)
+            if row["ll"]:
+                file_by_country(row, country_for(_raw, row.get("gl")))
+        absorb(row)
 
     cutoff = int(time.time() * 1000) - RETAIN_DAYS * 86400000
     items = [i for i in items if (i.get("d") or cutoff + 1) >= cutoff]
